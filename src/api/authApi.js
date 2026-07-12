@@ -1,18 +1,24 @@
-import usersData from '@/mock/users.json';
+import { mockDb } from '@/mock/mockDb';
+import { mockStorage } from '@/services/mockStorage';
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-// Simulated user "database" with credentials — password included only here,
-// mimicking a backend's user table.
-const mockCredentials = [
+const CREDS_KEY = 'hue_mock_credentials';
+
+// Seed credentials — only used the very first time the app runs on a browser
+// with no persisted state yet. After that, mockStorage's persisted copy wins.
+const seedCredentials = [
   { email: 'ava@hue.app', password: 'password123', userId: 'u1' },
   { email: 'miles@hue.app', password: 'password123', userId: 'u2' },
 ];
 
+let mockCredentials = mockStorage.get(CREDS_KEY, seedCredentials);
+
+function persistCredentials() {
+  mockStorage.set(CREDS_KEY, mockCredentials);
+}
+
 function generateMockToken(userId) {
-  // Not a real JWT — just a base64 payload with an expiry, enough to exercise
-  // real expiry/validation logic on the client. Real backend replaces this
-  // with an actual signed JWT; the shape consumed below stays the same.
   const payload = { userId, exp: Date.now() + 1000 * 60 * 60 * 24 }; // 24h
   return btoa(JSON.stringify(payload));
 }
@@ -31,30 +37,47 @@ export async function loginRequest({ email, password }) {
   if (!match) {
     throw new Error('Invalid email or password');
   }
-  const user = usersData.find((u) => u.id === match.userId);
+  const user = mockDb.getUsers().find((u) => u.id === match.userId);
+  if (!user) {
+    throw new Error('Invalid email or password');
+  }
   const token = generateMockToken(user.id);
   return { token, user };
 }
 
 export async function registerRequest({ fullName, username, email, password }) {
   await delay(700);
+
   const emailTaken = mockCredentials.some((c) => c.email === email);
   if (emailTaken) {
     throw new Error('An account with this email already exists');
   }
-  const usernameTaken = usersData.some((u) => u.username === username);
+
+  const usernameTaken = mockDb.getUsers().some((u) => u.username === username);
   if (usernameTaken) {
     throw new Error('That username is already taken');
   }
 
   const newUser = {
-    id: `u${usersData.length + 1}`,
+    id: `u${Date.now()}`,
     name: fullName,
     username,
     avatarUrl: null,
+    bio: '',
+    coverUrl: null,
+    followerCount: 0,
+    followingCount: 0,
+    postCount: 0,
+    joinedAt: new Date().toISOString(),
   };
-  usersData.push(newUser);
-  mockCredentials.push({ email, password, userId: newUser.id });
+
+  // Persisted via mockDb (shared with postApi/userApi — single source of truth for users)
+  mockDb.setUsers((users) => [...users, newUser]);
+
+  // Credentials persisted separately since they're auth-specific, not part of
+  // the public user object other API files read from.
+  mockCredentials = [...mockCredentials, { email, password, userId: newUser.id }];
+  persistCredentials();
 
   const token = generateMockToken(newUser.id);
   return { token, user: newUser };
@@ -68,7 +91,7 @@ export async function fetchCurrentUser(token) {
   if (!payload || payload.exp < Date.now()) {
     throw new Error('Session expired');
   }
-  const user = usersData.find((u) => u.id === payload.userId);
+  const user = mockDb.getUsers().find((u) => u.id === payload.userId);
   if (!user) throw new Error('User not found');
   return user;
 }

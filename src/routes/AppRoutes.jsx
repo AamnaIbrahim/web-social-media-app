@@ -8,6 +8,7 @@ import Register from '@/pages/Register/Register';
 import Profile from '@/pages/Profile/Profile';
 import LandingLayout from '@/layouts/LandingLayout';
 import ProfileLayout from '@/layouts/ProfileLayout';
+import Saved from '@/pages/Saved/Saved';
 
 
 import AuthLayout from '@/layouts/AuthLayout';
@@ -40,11 +41,12 @@ export default function AppRoutes() {
           <Route path={ROUTES.PROFILE} element={<Profile />} />
        </Route>
         <Route element={<MainLayout />}>
-          <Route path={ROUTES.HOME} element={<Home />} />          <Route path={ROUTES.EXPLORE} element={null} />
+          <Route path={ROUTES.HOME} element={<Home />} />          
+          <Route path={ROUTES.EXPLORE} element={null} />
           <Route path={ROUTES.PROFILE} element={null} />
           <Route path={ROUTES.MESSAGES} element={null} />
           <Route path={ROUTES.NOTIFICATIONS} element={null} />
-          <Route path={ROUTES.SAVED} element={null} />
+          <Route path={ROUTES.SAVED} element={<Saved />} />          
           <Route path={ROUTES.SETTINGS} element={null} />
         </Route>
       </Route>
