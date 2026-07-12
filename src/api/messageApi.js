@@ -71,3 +71,39 @@ export async function sendMessage({ conversationId, senderId, text }) {
   const users = mockDb.getUsers();
   return { ...newMessage, sender: users.find((u) => u.id === senderId) };
 }
+
+export async function fetchMessageableUsers(currentUserId, query = '') {
+  await delay(300);
+  const users = mockDb.getUsers().filter((u) => u.id !== currentUserId);
+  if (!query.trim()) return users;
+
+  const lower = query.toLowerCase();
+  return users.filter(
+    (u) => u.name.toLowerCase().includes(lower) || u.username.toLowerCase().includes(lower)
+  );
+}
+
+export async function findOrCreateDirectConversation(currentUserId, otherUserId) {
+  await delay(400);
+  const conversations = mockDb.getConversations();
+
+  const existing = conversations.find(
+    (c) =>
+      c.type === 'direct' &&
+      c.participantIds.includes(currentUserId) &&
+      c.participantIds.includes(otherUserId)
+  );
+  if (existing) return hydrateConversation(existing, currentUserId);
+
+  const newConversation = {
+    id: `c${Date.now()}`,
+    type: 'direct',
+    participantIds: [currentUserId, otherUserId],
+    name: null,
+    avatarUrl: null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  mockDb.setConversations((convs) => [...convs, newConversation]);
+  return hydrateConversation(newConversation, currentUserId);
+}
