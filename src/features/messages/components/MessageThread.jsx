@@ -5,10 +5,10 @@ import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
 import Avatar from '@/components/ui/Avatar';
 import { SkeletonText } from '@/components/ui/Skeleton';
-import { ArrowLeft, AlertCircle } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import Button from '@/components/ui/Button';
+import ErrorState from '@/components/ui/ErrorState';
 
 export default function MessageThread({ conversationId }) {
   const { user } = useAuth();
@@ -23,17 +23,15 @@ export default function MessageThread({ conversationId }) {
 
   if (isError) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center text-center gap-3">
-        <AlertCircle size={36} strokeWidth={1.5} className="text-error" />
-        <p className="text-sm font-semibold text-text-primary">Couldn't load this conversation</p>
-        <Button variant="secondary" size="sm" onClick={() => refetch()}>Retry</Button>
+      <div className="flex-1 flex items-center justify-center">
+        <ErrorState title="Couldn't load this conversation" onRetry={refetch} />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+    <div className="flex flex-col h-full pb-14 lg:pb-0">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0">
         <Link to={ROUTES.MESSAGES} className="sm:hidden btn-ghost !p-1.5 rounded-full">
           <ArrowLeft size={18} strokeWidth={1.75} />
         </Link>

@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import Navbar from '@/components/common/Navbar';
 import LeftSidebar from '@/components/common/LeftSidebar';
+import MobileBottomNav from '@/components/common/MobileBottomNav';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/utils/cn';
 
@@ -20,7 +21,7 @@ export default function SettingsLayout() {
       <Navbar variant="app" />
       <div className="max-w-screen-2xl mx-auto flex">
         <LeftSidebar />
-        <div className="flex flex-1 min-w-0 max-w-4xl mx-auto py-6 px-4 sm:px-6 gap-8">
+        <div className="flex flex-1 min-w-0 max-w-4xl mx-auto py-6 px-4 sm:px-6 pb-24 lg:pb-6 gap-8">
           <nav className="hidden md:flex flex-col gap-1 w-48 shrink-0 sticky top-20 h-fit">
             {settingsNav.map(({ label, to }) => (
               <Link
@@ -43,6 +44,7 @@ export default function SettingsLayout() {
           </main>
         </div>
       </div>
+      <MobileBottomNav />
     </div>
   );
 }

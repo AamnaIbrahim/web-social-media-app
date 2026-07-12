@@ -3,6 +3,7 @@ import { Outlet, useParams } from 'react-router-dom';
 import { SquarePen } from 'lucide-react';
 import Navbar from '@/components/common/Navbar';
 import LeftSidebar from '@/components/common/LeftSidebar';
+import MobileBottomNav from '@/components/common/MobileBottomNav';
 import ConversationList from '@/features/messages/components/ConversationList';
 import NewConversationModal from '@/features/messages/components/NewConversationModal';
 import { cn } from '@/utils/cn';
@@ -34,18 +35,27 @@ export default function MessagesLayout() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto scrollbar-hide">
+            <div className="flex-1 overflow-y-auto scrollbar-hide pb-14 lg:pb-0">
               <ConversationList />
             </div>
           </div>
 
-          <div className={cn('flex-col flex-1 min-w-0', conversationId ? 'flex' : 'hidden sm:flex')}>
+          <div
+            className={cn(
+              'flex-col flex-1 min-w-0 min-h-0',
+              conversationId ? 'flex' : 'hidden sm:flex'
+            )}
+          >
             <Outlet />
           </div>
         </div>
       </div>
 
       <NewConversationModal open={composerOpen} onClose={() => setComposerOpen(false)} />
+
+      {/* Hidden while a thread is open on mobile — the chat view should use
+          the full screen; the nav reappears once back on the list. */}
+      <MobileBottomNav className={cn(conversationId && 'hidden sm:flex')} />
     </div>
   );
 }

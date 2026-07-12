@@ -4,7 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/utils/cn';
 
-export default function MobileBottomNav() {
+export default function MobileBottomNav({ className }) {
   const { user } = useAuth();
 
   const items = [
@@ -17,7 +17,10 @@ export default function MobileBottomNav() {
 
   return (
     <nav
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-surface/90 backdrop-blur-md border-t border-border flex items-center justify-around h-14"
+      className={cn(
+        'lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-bg-surface/90 backdrop-blur-md border-t border-border flex items-center justify-around h-14',
+        className
+      )}
       aria-label="Primary"
     >
       {items.map(({ icon: Icon, to, label }) => (
