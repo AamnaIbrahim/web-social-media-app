@@ -31,7 +31,7 @@ export default function PostGrid({ posts, isLoading, emptyVariant = 'posts' }) {
   return (
     <div className="grid grid-cols-3 gap-1 sm:gap-2">
       {posts.map((post) => (
-        <PostGridItem key={post.id} post={post} onClick={() => navigate(`/profile/${post.user.username}`)} />
+        <PostGridItem key={post.id} post={post} onClick={() => navigate(`/post/${post.id}`)} />
       ))}
     </div>
   );

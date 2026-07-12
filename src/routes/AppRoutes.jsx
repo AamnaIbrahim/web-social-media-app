@@ -29,6 +29,8 @@ import NotificationSettings from '@/pages/Settings/NotificationSettings';
 import Appearance from '@/pages/Settings/Appearance';
 import Security from '@/pages/Settings/Security';
 import NotFound from '@/pages/NotFound';
+import PostDetail from '@/pages/PostDetail/PostDetail';
+
 
 // Lightweight cross-fade applied to every top-level page. Kept fast (0.15s,
 // opacity-only) so it signals a page change without adding perceptible
@@ -76,7 +78,7 @@ export default function AppRoutes() {
             <Route path={ROUTES.EXPLORE} element={<PageTransition><Explore /></PageTransition>} />
             <Route path={ROUTES.NOTIFICATIONS} element={<PageTransition><Notifications /></PageTransition>} />
             <Route path={ROUTES.SAVED} element={<PageTransition><Saved /></PageTransition>} />
-            <Route path={ROUTES.POST_DETAIL} element={null} />
+            <Route path={ROUTES.POST_DETAIL} element={<PageTransition><PostDetail /></PageTransition>} />
           </Route>
 
           <Route element={<SettingsLayout />}>

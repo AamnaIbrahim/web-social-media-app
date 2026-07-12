@@ -9,6 +9,7 @@ export const ROUTES = {
   MESSAGES: '/messages',
   NOTIFICATIONS: '/notifications',
   SAVED: '/saved',
+  POST_DETAIL: '/post/:postId',
   SETTINGS: '/settings',
   SETTINGS_ACCOUNT: '/settings/account',
   SETTINGS_PRIVACY: '/settings/privacy',

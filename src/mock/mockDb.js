@@ -4,6 +4,7 @@ import seedConversations from './conversations.json';
 import seedMessages from './messages.json';
 import seedNotifications from './notifications.json';
 import { mockStorage } from '@/services/mockStorage';
+import seedComments from './comments.json';
 
 const POSTS_KEY = 'hue_mock_posts';
 const USERS_KEY = 'hue_mock_users';
@@ -11,7 +12,9 @@ const CONVERSATIONS_KEY = 'hue_mock_conversations';
 const MESSAGES_KEY = 'hue_mock_messages';
 const NOTIFICATIONS_KEY = 'hue_mock_notifications';
 const FOLLOWS_KEY = 'hue_mock_follows'; // stored as array of "followerId:followedId" strings
+const COMMENTS_KEY = 'hue_mock_comments';
 
+let comments = mockStorage.get(COMMENTS_KEY, seedComments);
 let posts = mockStorage.get(POSTS_KEY, seedPosts);
 let users = mockStorage.get(USERS_KEY, seedUsers);
 let conversations = mockStorage.get(CONVERSATIONS_KEY, seedConversations);
@@ -58,5 +61,11 @@ export const mockDb = {
     else follows.delete(key);
     mockStorage.set(FOLLOWS_KEY, Array.from(follows));
     return nowFollowing;
+  },
+  getComments: () => comments,
+  setComments: (updater) => {
+    comments = typeof updater === 'function' ? updater(comments) : updater;
+    mockStorage.set(COMMENTS_KEY, comments);
+    return comments;
   },
 };

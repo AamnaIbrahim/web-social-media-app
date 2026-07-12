@@ -23,7 +23,6 @@ function PostCard({ post }) {
   const navigate = useNavigate();
   const likeMutation = useLikePost();
   const saveMutation = useSavePost();
-
   const renderedText = useMemo(() => renderTextWithHashtags(post.text), [post.text]);
 
   const handleShare = () => {

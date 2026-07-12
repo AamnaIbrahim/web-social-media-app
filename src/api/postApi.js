@@ -17,6 +17,41 @@ export async function fetchPosts({ pageParam = 1, limit = 5 }) {
   };
 }
 
+export async function fetchPostById(postId) {
+  await delay(400);
+  const post = mockDb.getPosts().find((p) => p.id === postId);
+  if (!post) throw new Error('Post not found');
+  return hydratePost(post);
+}
+export async function fetchComments(postId) {
+  await delay(400);
+  const users = mockDb.getUsers();
+  return mockDb
+    .getComments()
+    .filter((c) => c.postId === postId)
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    .map((c) => ({ ...c, user: users.find((u) => u.id === c.userId) }));
+}
+
+export async function addComment({ postId, userId, text }) {
+  await delay(400);
+
+  const newComment = {
+    id: `cm${Date.now()}`,
+    postId,
+    userId,
+    text,
+    createdAt: new Date().toISOString(),
+  };
+  mockDb.setComments((comments) => [...comments, newComment]);
+  mockDb.setPosts((posts) =>
+    posts.map((p) => (p.id === postId ? { ...p, commentCount: p.commentCount + 1 } : p))
+  );
+
+  const user = mockDb.getUsers().find((u) => u.id === userId);
+  return { ...newComment, user };
+}
+
 export async function toggleLike(postId) {
   await delay(200);
   const updated = mockDb.setPosts((posts) =>
