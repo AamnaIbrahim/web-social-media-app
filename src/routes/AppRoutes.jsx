@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { Navigate } from 'react-router-dom';
+
+import SettingsLayout from '@/layouts/SettingsLayout';
 import Account from '@/pages/Settings/Account';
 import Privacy from '@/pages/Settings/Privacy';
 import NotificationSettings from '@/pages/Settings/NotificationSettings';
@@ -51,11 +53,11 @@ export default function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route path={ROUTES.HOME} element={<Home />} />          
           <Route path={ROUTES.EXPLORE} element={<Explore />} />
-          <Route path={ROUTES.PROFILE} element={null} />
           <Route path={ROUTES.MESSAGES} element={null} />
           <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
           <Route path={ROUTES.SAVED} element={<Saved />} />          
-          <Route element={<SettingsLayout />}>
+        </Route>
+        <Route element={<SettingsLayout />}>
           <Route path={ROUTES.SETTINGS} element={<Navigate to={ROUTES.SETTINGS_ACCOUNT} replace />} />
             <Route path={ROUTES.SETTINGS_ACCOUNT} element={<Account />} />
             <Route path={ROUTES.SETTINGS_PRIVACY} element={<Privacy />} />
@@ -63,7 +65,6 @@ export default function AppRoutes() {
             <Route path={ROUTES.SETTINGS_APPEARANCE} element={<Appearance />} />
             <Route path={ROUTES.SETTINGS_SECURITY} element={<Security />} />
           </Route>
-        </Route>
       </Route>
 
       {/* 404 */}
