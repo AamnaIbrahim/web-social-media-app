@@ -60,6 +60,7 @@ export default function Explore() {
                     topic={topic.topic}
                     category={topic.category}
                     postCount={topic.postCount}
+                    onClick={() => setQuery(topic.topic)}
                   />
                 ))}
               </div>
@@ -152,6 +153,7 @@ function SearchResults({ query, results, isLoading }) {
                 topic={topic.topic}
                 category={topic.category}
                 postCount={topic.postCount}
+                onClick={() => setQuery(topic.topic)}
               />
             ))}
           </div>
