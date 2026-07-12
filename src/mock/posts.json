@@ -1,0 +1,46 @@
+[
+  {
+    "id": "p1",
+    "userId": "u1",
+    "text": "Sunrise over the coast this morning. Nothing beats this light. #goldenhour #travel",
+    "images": ["https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800"],
+    "likeCount": 24,
+    "commentCount": 6,
+    "liked": false,
+    "saved": false,
+    "createdAt": "2026-07-10T06:12:00Z"
+  },
+  {
+    "id": "p2",
+    "userId": "u2",
+    "text": "Shipping is a feature. Reminder to self as I close 14 tabs.",
+    "images": [],
+    "likeCount": 24,
+    "commentCount": 6,
+    "liked": true,
+    "saved": false,
+    "createdAt": "2026-07-10T04:45:00Z"
+  },
+  {
+    "id": "p3",
+    "userId": "u3",
+    "text": "Type study — a stricter modular scale this week.",
+    "images": ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800"],
+    "likeCount": 24,
+    "commentCount": 6,
+    "liked": false,
+    "saved": true,
+    "createdAt": "2026-07-09T21:30:00Z"
+  },
+  {
+    "id": "p4",
+    "userId": "u4",
+    "text": "Small talk still counts. Said hi to three neighbors today.",
+    "images": [],
+    "likeCount": 11,
+    "commentCount": 2,
+    "liked": false,
+    "saved": false,
+    "createdAt": "2026-07-09T18:05:00Z"
+  }
+]

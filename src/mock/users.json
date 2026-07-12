@@ -1,0 +1,52 @@
+[
+  {
+    "id": "u1",
+    "name": "Aamna Ibrahim",
+    "username": "Aami",
+    "avatarUrl": null,
+    "bio": "Photographer chasing golden hour. Coffee, coastlines, and quiet mornings.",
+    "coverUrl": null,
+    "followerCount": 1284,
+    "followingCount": 312,
+    "postCount": 47,
+    "joinedAt": "2024-03-12T00:00:00Z"
+  },
+  
+  { 
+    "id": "u2", 
+    "name": "Bilal Qureshi", 
+    "username": "bilalqureshi", 
+    "avatarUrl": null,
+    "bio": "Photographer chasing golden hour. Coffee, coastlines, and quiet mornings.",
+    "coverUrl": null,
+    "followerCount": 100,
+    "followingCount": 1098,
+    "postCount": 5,
+    "joinedAt": "2024-03-12T00:00:00Z"
+  },
+ 
+  { 
+    "id": "u3", 
+    "name": "Madeeha", 
+    "username": "Madi", 
+    "avatarUrl": null,
+    "bio": "Photographer chasing golden hour. Coffee, coastlines, and quiet mornings.",
+    "coverUrl": null,
+    "followerCount": 98,
+    "followingCount": 769,
+    "postCount": 19,
+    "joinedAt": "2024-03-12T00:00:00Z"},
+  
+  { 
+    "id": "u4", 
+    "name": "Ayesha Khan", 
+    "username": "aashiKhan", 
+    "avatarUrl": null,
+    "bio": "Photographer chasing golden hour. Coffee, coastlines, and quiet mornings.",
+    "coverUrl": null,
+    "followerCount": 5634,
+    "followingCount": 90,
+    "postCount": 98,
+    "joinedAt": "2024-03-12T00:00:00Z"
+  }
+]
