@@ -9,6 +9,7 @@ import Profile from '@/pages/Profile/Profile';
 import LandingLayout from '@/layouts/LandingLayout';
 import ProfileLayout from '@/layouts/ProfileLayout';
 import Saved from '@/pages/Saved/Saved';
+import Notifications from '@/pages/Notifications/Notifications';
 
 
 import AuthLayout from '@/layouts/AuthLayout';
@@ -45,7 +46,7 @@ export default function AppRoutes() {
           <Route path={ROUTES.EXPLORE} element={null} />
           <Route path={ROUTES.PROFILE} element={null} />
           <Route path={ROUTES.MESSAGES} element={null} />
-          <Route path={ROUTES.NOTIFICATIONS} element={null} />
+          <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
           <Route path={ROUTES.SAVED} element={<Saved />} />          
           <Route path={ROUTES.SETTINGS} element={null} />
         </Route>

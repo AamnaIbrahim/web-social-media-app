@@ -1,0 +1,7 @@
+[
+  { "id": "n1", "type": "like", "userId": "u1", "targetPostId": "p2", "message": "liked your post", "read": false, "createdAt": "2026-07-12T09:30:00Z" },
+  { "id": "n2", "type": "comment", "userId": "u3", "targetPostId": "p2", "message": "commented on your post", "read": false, "createdAt": "2026-07-12T08:10:00Z" },
+  { "id": "n3", "type": "follow", "userId": "u4", "targetPostId": null, "message": "started following you", "read": false, "createdAt": "2026-07-11T20:45:00Z" },
+  { "id": "n4", "type": "mention", "userId": "u1", "targetPostId": "p4", "message": "mentioned you in a post", "read": true, "createdAt": "2026-07-10T14:00:00Z" },
+  { "id": "n5", "type": "like", "userId": "u3", "targetPostId": "p2", "message": "liked your post", "read": true, "createdAt": "2026-07-09T11:20:00Z" }
+]
