@@ -1,0 +1,8 @@
+[
+  { "id": "t1", "topic": "goldenhour", "category": "Photography", "postCount": 12400 },
+  { "id": "t2", "topic": "shipfast", "category": "Tech", "postCount": 8210 },
+  { "id": "t3", "topic": "typestudy", "category": "Design", "postCount": 5630 },
+  { "id": "t4", "topic": "quietmornings", "category": "Lifestyle", "postCount": 4310 },
+  { "id": "t5", "topic": "coastaltravel", "category": "Travel", "postCount": 3980 },
+  { "id": "t6", "topic": "minimalui", "category": "Design", "postCount": 2870 }
+]
