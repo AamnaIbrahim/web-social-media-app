@@ -1,17 +1,14 @@
-import postsData from '@/mock/posts.json';
-import usersData from '@/mock/users.json';
+import { mockDb } from '@/mock/mockDb';
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-let posts = postsData.map((p) => ({ ...p }));
-
 function hydratePost(post) {
-  return { ...post, user: usersData.find((u) => u.id === post.userId) };
+  return { ...post, user: mockDb.getUsers().find((u) => u.id === post.userId) };
 }
 
-// Mimics a real paginated REST endpoint: GET /posts?page=1&limit=5
 export async function fetchPosts({ pageParam = 1, limit = 5 }) {
   await delay(600);
+  const posts = mockDb.getPosts();
   const start = (pageParam - 1) * limit;
   const pagePosts = posts.slice(start, start + limit);
   return {
@@ -20,20 +17,37 @@ export async function fetchPosts({ pageParam = 1, limit = 5 }) {
   };
 }
 
-// Mimics PATCH /posts/:id/like
 export async function toggleLike(postId) {
   await delay(200);
-  posts = posts.map((p) =>
-    p.id === postId
-      ? { ...p, liked: !p.liked, likeCount: p.liked ? p.likeCount - 1 : p.likeCount + 1 }
-      : p
+  const updated = mockDb.setPosts((posts) =>
+    posts.map((p) =>
+      p.id === postId ? { ...p, liked: !p.liked, likeCount: p.liked ? p.likeCount - 1 : p.likeCount + 1 } : p
+    )
   );
-  return hydratePost(posts.find((p) => p.id === postId));
+  return hydratePost(updated.find((p) => p.id === postId));
 }
 
-// Mimics PATCH /posts/:id/save
 export async function toggleSave(postId) {
   await delay(200);
-  posts = posts.map((p) => (p.id === postId ? { ...p, saved: !p.saved } : p));
-  return hydratePost(posts.find((p) => p.id === postId));
+  const updated = mockDb.setPosts((posts) =>
+    posts.map((p) => (p.id === postId ? { ...p, saved: !p.saved } : p))
+  );
+  return hydratePost(updated.find((p) => p.id === postId));
+}
+
+export async function createPost({ text, images, userId }) {
+  await delay(800);
+  const newPost = {
+    id: `p${Date.now()}`,
+    userId,
+    text,
+    images: images.map((file) => (typeof file === 'string' ? file : URL.createObjectURL(file))),
+    likeCount: 0,
+    commentCount: 0,
+    liked: false,
+    saved: false,
+    createdAt: new Date().toISOString(),
+  };
+  mockDb.setPosts((posts) => [newPost, ...posts]);
+  return hydratePost(newPost);
 }

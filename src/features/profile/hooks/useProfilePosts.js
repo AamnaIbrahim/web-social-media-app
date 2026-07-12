@@ -9,7 +9,7 @@ export function useUserPosts(userId) {
   });
 }
 
-export function useSavedPosts(enabled) {
+export function useSavedPosts(enabled = true) {
   return useQuery({
     queryKey: ['savedPosts'],
     queryFn: fetchSavedPosts,
