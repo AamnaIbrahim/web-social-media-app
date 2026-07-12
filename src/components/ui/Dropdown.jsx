@@ -9,12 +9,30 @@ export default function Dropdown({ trigger, children, align = 'right' }) {
 
   useOnClickOutside(ref, () => setOpen(false));
 
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [open]);
+
   return (
     <div ref={ref} className="relative inline-block">
-      <div onClick={() => setOpen((o) => !o)}>{trigger}</div>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="contents"
+      >
+        {trigger}
+      </button>
       <AnimatePresence>
         {open && (
           <motion.div
+            role="menu"
             initial={{ opacity: 0, scale: 0.96, y: -4 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: -4 }}
@@ -36,6 +54,7 @@ export default function Dropdown({ trigger, children, align = 'right' }) {
 export function DropdownItem({ icon, children, danger, ...props }) {
   return (
     <button
+      role="menuitem"
       className={cn(
         'w-full flex items-center gap-2.5 px-4 py-2 text-sm text-left transition-colors duration-150',
         danger ? 'text-error hover:bg-error-subtle' : 'text-text-primary hover:bg-bg-subtle'

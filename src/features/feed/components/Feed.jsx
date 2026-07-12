@@ -5,6 +5,8 @@ import PostCard from './PostCard';
 import { SkeletonCard } from '@/components/ui/Skeleton';
 import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
+import EmptyState from '@/components/ui/EmptyState';
+import ErrorState from '@/components/ui/ErrorState';
 
 export default function Feed() {
   const {
@@ -50,16 +52,10 @@ export default function Feed() {
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center text-center gap-3 py-16">
-        <AlertCircle size={40} strokeWidth={1.5} className="text-error" />
-        <p className="text-base font-semibold text-text-primary">Couldn't load your feed</p>
-        <p className="text-sm text-text-secondary max-w-xs">
-          Something went wrong reaching the server. Check your connection and try again.
-        </p>
-        <Button variant="secondary" size="sm" onClick={() => refetch()}>
-          Retry
-        </Button>
-      </div>
+      <ErrorState
+        description="Something went wrong reaching the server. Check your connection and try again."
+        onRetry={refetch}
+      />
     );
   }
 
@@ -67,13 +63,11 @@ export default function Feed() {
 
   if (posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center text-center gap-3 py-16">
-        <Inbox size={40} strokeWidth={1.5} className="text-text-tertiary" />
-        <p className="text-base font-semibold text-text-primary">No posts yet</p>
-        <p className="text-sm text-text-secondary max-w-xs">
-          Follow a few people to start seeing their posts here.
-        </p>
-      </div>
+      <EmptyState
+        icon={Inbox}
+        title="No posts yet"
+        description="Follow a few people to start seeing their posts here."
+      />
     );
   }
 

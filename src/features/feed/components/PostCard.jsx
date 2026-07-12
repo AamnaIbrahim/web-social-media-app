@@ -1,3 +1,5 @@
+import { memo, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '@/components/ui/Card';
 import Avatar from '@/components/ui/Avatar';
 import PostActions from '@/components/ui/PostActions';
@@ -5,9 +7,24 @@ import { useLikePost, useSavePost } from '../hooks/usePostActions';
 import { formatTimeAgo } from '@/utils/formatDate';
 import { showToast } from '@/components/ui/toast';
 
-export default function PostCard({ post }) {
+function renderTextWithHashtags(text) {
+  return text.split(/(\#\w+)/g).map((part, i) =>
+    part.startsWith('#') ? (
+      <span key={i} className="text-accent hover:underline cursor-pointer">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+}
+
+function PostCard({ post }) {
+  const navigate = useNavigate();
   const likeMutation = useLikePost();
   const saveMutation = useSavePost();
+
+  const renderedText = useMemo(() => renderTextWithHashtags(post.text), [post.text]);
 
   const handleShare = () => {
     navigator.clipboard.writeText(`${window.location.origin}/post/${post.id}`);
@@ -26,9 +43,7 @@ export default function PostCard({ post }) {
         </div>
       </div>
 
-      <p className="text-sm text-text-primary whitespace-pre-wrap">
-        {renderTextWithHashtags(post.text)}
-      </p>
+      <p className="text-sm text-text-primary whitespace-pre-wrap">{renderedText}</p>
 
       {post.images.length > 0 && (
         <div className={post.images.length > 1 ? 'grid grid-cols-2 gap-2' : ''}>
@@ -51,7 +66,7 @@ export default function PostCard({ post }) {
         commentCount={post.commentCount}
         onLike={() => likeMutation.mutate(post.id)}
         onSave={() => saveMutation.mutate(post.id)}
-        onComment={() => {}}
+        onComment={() => navigate(`/post/${post.id}`)}
         onShare={handleShare}
         onReport={() => showToast.info('Post reported')}
       />
@@ -59,14 +74,4 @@ export default function PostCard({ post }) {
   );
 }
 
-function renderTextWithHashtags(text) {
-  return text.split(/(\#\w+)/g).map((part, i) =>
-    part.startsWith('#') ? (
-      <span key={i} className="text-accent hover:underline cursor-pointer">
-        {part}
-      </span>
-    ) : (
-      part
-    )
-  );
-}
+export default memo(PostCard);

@@ -1,13 +1,12 @@
 import { mockDb } from '@/mock/mockDb';
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
-let follows = new Set();
 
-export async function fetchUserByUsername(username) {
+export async function fetchUserByUsername(username, currentUserId) {
   await delay(500);
   const user = mockDb.getUsers().find((u) => u.username === username);
   if (!user) throw new Error('User not found');
-  return { ...user, isFollowing: follows.has(user.id) };
+  return { ...user, isFollowing: mockDb.isFollowing(currentUserId, user.id) };
 }
 
 export async function fetchUserPosts(userId) {
@@ -24,10 +23,8 @@ export async function fetchSavedPosts() {
     .map((p) => ({ ...p, user: mockDb.getUsers().find((u) => u.id === p.userId) }));
 }
 
-export async function toggleFollow(userId) {
+export async function toggleFollow(currentUserId, targetUserId) {
   await delay(300);
-  const isNowFollowing = !follows.has(userId);
-  if (isNowFollowing) follows.add(userId);
-  else follows.delete(userId);
-  return { userId, isFollowing: isNowFollowing };
+  const isFollowing = mockDb.toggleFollow(currentUserId, targetUserId);
+  return { userId: targetUserId, isFollowing };
 }

@@ -3,6 +3,7 @@ import Navbar from '@/components/common/Navbar';
 import LeftSidebar from '@/components/common/LeftSidebar';
 import RightSidebar from '@/components/common/RightSidebar';
 import RightSidebarContent from '@/components/common/RightSidebarContent';
+import MobileBottomNav from '@/components/common/MobileBottomNav';
 
 export default function MainLayout() {
   return (
@@ -17,6 +18,7 @@ export default function MainLayout() {
           <RightSidebarContent />
         </RightSidebar>
       </div>
+      <MobileBottomNav />
     </div>
   );
 }

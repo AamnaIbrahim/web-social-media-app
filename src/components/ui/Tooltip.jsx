@@ -19,6 +19,8 @@ export default function Tooltip({ children, content, side = 'top' }) {
       ref={triggerRef}
       onMouseEnter={showTooltip}
       onMouseLeave={() => setOpen(false)}
+      onFocus={showTooltip}
+      onBlur={() => setOpen(false)}
       className="inline-flex"
     >
       {children}
