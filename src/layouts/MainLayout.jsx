@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '@/components/common/Navbar';
 import LeftSidebar from '@/components/common/LeftSidebar';
-import RightSidebar from '@/components/common/RightSidebar';
+import RightSidebarContent from '@/components/common/RightSidebarContent';
 
 export default function MainLayout() {
   return (
@@ -13,7 +13,7 @@ export default function MainLayout() {
           <Outlet />
         </main>
         <RightSidebar>
-          {/* Trending / suggestions content slot — populated per-page later */}
+          <RightSidebarContent />
         </RightSidebar>
       </div>
     </div>
