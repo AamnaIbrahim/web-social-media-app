@@ -16,4 +16,6 @@ export const ROUTES = {
   SETTINGS_APPEARANCE: '/settings/appearance',
   SETTINGS_SECURITY: '/settings/security',
   NOT_FOUND: '*',
+  MESSAGES: '/messages',
+  MESSAGE_THREAD: '/messages/:conversationId',
 };

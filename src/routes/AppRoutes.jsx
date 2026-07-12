@@ -19,7 +19,9 @@ import ProfileLayout from '@/layouts/ProfileLayout';
 import Saved from '@/pages/Saved/Saved';
 import Notifications from '@/pages/Notifications/Notifications';
 import Explore from '@/pages/Explore/Explore';
-
+import Messages from '@/pages/Messages/Messages';
+import Thread from '@/pages/Messages/Thread';
+import MessagesLayout from '@/layouts/MessagesLayout';
 
 import AuthLayout from '@/layouts/AuthLayout';
 import MainLayout from '@/layouts/MainLayout';
@@ -53,7 +55,6 @@ export default function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route path={ROUTES.HOME} element={<Home />} />          
           <Route path={ROUTES.EXPLORE} element={<Explore />} />
-          <Route path={ROUTES.MESSAGES} element={null} />
           <Route path={ROUTES.NOTIFICATIONS} element={<Notifications />} />
           <Route path={ROUTES.SAVED} element={<Saved />} />          
         </Route>
@@ -65,7 +66,11 @@ export default function AppRoutes() {
             <Route path={ROUTES.SETTINGS_APPEARANCE} element={<Appearance />} />
             <Route path={ROUTES.SETTINGS_SECURITY} element={<Security />} />
           </Route>
-      </Route>
+          <Route element={<MessagesLayout />}>
+            <Route path={ROUTES.MESSAGES} element={<Messages />} />
+            <Route path="/messages/:conversationId" element={<Thread />} />
+          </Route>
+      </Route> 
 
       {/* 404 */}
       <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "c1",
+    "type": "direct",
+    "participantIds": ["u1", "u2"],
+    "name": null,
+    "avatarUrl": null,
+    "updatedAt": "2026-07-12T10:15:00Z"
+  },
+  {
+    "id": "c2",
+    "type": "direct",
+    "participantIds": ["u1", "u3"],
+    "name": null,
+    "avatarUrl": null,
+    "updatedAt": "2026-07-11T18:40:00Z"
+  },
+  {
+    "id": "c3",
+    "type": "group",
+    "participantIds": ["u1", "u2", "u3", "u4"],
+    "name": "Design Crit Squad",
+    "avatarUrl": null,
+    "updatedAt": "2026-07-10T09:00:00Z"
+  }
+]
