@@ -10,5 +10,10 @@ export const ROUTES = {
   NOTIFICATIONS: '/notifications',
   SAVED: '/saved',
   SETTINGS: '/settings',
+  SETTINGS_ACCOUNT: '/settings/account',
+  SETTINGS_PRIVACY: '/settings/privacy',
+  SETTINGS_NOTIFICATIONS: '/settings/notifications',
+  SETTINGS_APPEARANCE: '/settings/appearance',
+  SETTINGS_SECURITY: '/settings/security',
   NOT_FOUND: '*',
 };
