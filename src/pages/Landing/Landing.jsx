@@ -63,7 +63,7 @@ export default function Landing() {
           transition={{ duration: 0.4, delay: 0.1 }}
           className="text-lg text-text-secondary max-w-xl mx-auto mt-6"
         >
-          hue is a modern social feed for photos, thoughts and small talk. No algorithms shouting at you —
+          echo is a modern social feed for photos, thoughts and small talk. No algorithms shouting at you —
           just the people you follow, in order.
         </motion.p>
 
@@ -180,7 +180,7 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="border-t border-border py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-text-tertiary">
-        <span>hue · © 2026</span>
+        <span>echo · © 2026</span>
         <div className="flex items-center gap-6">
           <Link to="/privacy" className="hover:text-text-secondary">Privacy</Link>
           <Link to="/terms" className="hover:text-text-secondary">Terms</Link>

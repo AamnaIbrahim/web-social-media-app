@@ -128,6 +128,20 @@
   * {
     border-color: var(--color-border-default);
   }
+  button:not(:disabled),
+  [role="button"],
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  .cursor-pointer-target {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 /* ---- Components ---- */

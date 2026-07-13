@@ -22,7 +22,7 @@ export default function Navbar({ variant = 'app' }) {
     <header className="sticky top-0 z-40 h-16 bg-bg-surface/80 backdrop-blur-md border-b border-border">
       <div className="h-full max-w-screen-2xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Logo size="md" />
+        <Logo size="md" interactive={variant !== 'app'} />
 
         {/* Marketing nav links (landing page only) */}
         {variant === 'marketing' && (

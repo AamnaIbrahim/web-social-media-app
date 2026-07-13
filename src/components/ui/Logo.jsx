@@ -2,17 +2,47 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/utils/cn';
 import { ROUTES } from '@/constants/routes';
 
-const sizeMap = { sm: 'w-6 h-6 text-base', md: 'w-8 h-8 text-lg', lg: 'w-10 h-10 text-xl' };
+const sizeMap = {
+  sm: { box: 'w-6 h-6', text: 'text-base', letter: 'text-xs' },
+  md: { box: 'w-8 h-8', text: 'text-lg', letter: 'text-sm' },
+  lg: { box: 'w-10 h-10', text: 'text-xl', letter: 'text-base' },
+};
 
-export default function Logo({ size = 'md', withText = true, inverse = false, className }) {
+function Mark({ size, inverse }) {
   return (
-    <Link to={ROUTES.LANDING} className={cn('inline-flex items-center gap-2', className)}>
-      <span className={cn('rounded-full bg-accent shrink-0', sizeMap[size].split(' ')[0], sizeMap[size].split(' ')[1])} />
+    <span
+      className={cn(
+        'rounded-full bg-accent shrink-0 flex items-center justify-center font-bold',
+        sizeMap[size].box,
+        sizeMap[size].letter,
+        inverse ? 'text-accent' : 'text-text-inverse'
+      )}
+      style={inverse ? { backgroundColor: 'white' } : undefined}
+    >
+      E
+    </span>
+  );
+}
+
+export default function Logo({ size = 'md', withText = true, inverse = false, interactive = true, className }) {
+  const content = (
+    <span className={cn('inline-flex items-center gap-2', className)}>
+      <Mark size={size} inverse={inverse} />
       {withText && (
-        <span className={cn('font-bold', sizeMap[size].split(' ')[2], inverse ? 'text-text-inverse' : 'text-text-primary')}>
-          hue
+        <span className={cn('font-bold', sizeMap[size].text, inverse ? 'text-text-inverse' : 'text-text-primary')}>
+          echo
         </span>
       )}
+    </span>
+  );
+
+  if (!interactive) {
+    return content;
+  }
+
+  return (
+    <Link to={ROUTES.LANDING} className="inline-flex">
+      {content}
     </Link>
   );
 }

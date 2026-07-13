@@ -9,13 +9,18 @@ export default function LeftSidebar() {
   const location = useLocation();
 
   const navItems = [
-    { icon: Home, label: 'Home', to: ROUTES.HOME },
-    { icon: Compass, label: 'Explore', to: ROUTES.EXPLORE },
-    { icon: MessageCircle, label: 'Messages', to: ROUTES.MESSAGES },
-    { icon: Bell, label: 'Notifications', to: ROUTES.NOTIFICATIONS },
-    { icon: Bookmark, label: 'Saved', to: ROUTES.SAVED },
-    { icon: User, label: 'Profile', to: user ? `/profile/${user.username}` : '#' },
-    { icon: Settings, label: 'Settings', to: ROUTES.SETTINGS },
+    { icon: Home, label: 'Home', to: ROUTES.HOME, match: (path) => path === ROUTES.HOME },
+    { icon: Compass, label: 'Explore', to: ROUTES.EXPLORE, match: (path) => path === ROUTES.EXPLORE },
+    { icon: MessageCircle, label: 'Messages', to: ROUTES.MESSAGES, match: (path) => path.startsWith('/messages') },
+    { icon: Bell, label: 'Notifications', to: ROUTES.NOTIFICATIONS, match: (path) => path === ROUTES.NOTIFICATIONS },
+    { icon: Bookmark, label: 'Saved', to: ROUTES.SAVED, match: (path) => path === ROUTES.SAVED },
+    {
+      icon: User,
+      label: 'Profile',
+      to: user ? `/profile/${user.username}` : '#',
+      match: (path) => path.startsWith('/profile/'),
+    },
+    { icon: Settings, label: 'Settings', to: ROUTES.SETTINGS, match: (path) => path.startsWith('/settings') },
   ];
 
   return (
@@ -30,8 +35,8 @@ export default function LeftSidebar() {
       "
     >
       <nav className="flex flex-col gap-1">
-        {navItems.map(({ icon: Icon, label, to }) => {
-          const isActive = location.pathname === to || (label === 'Profile' && location.pathname.startsWith('/profile/'));
+        {navItems.map(({ icon: Icon, label, to, match }) => {
+          const isActive = match(location.pathname);
 
           return (
             <Link
