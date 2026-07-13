@@ -39,10 +39,8 @@ export default function MessageThread({ conversationId }) {
           <SkeletonText lines={1} className="w-32" />
         ) : (
           <>
-            <Avatar src={conversation.displayAvatar} name={conversation.displayName ?? 'Group'} size="sm" />
-            <p className="text-sm font-semibold text-text-primary truncate">
-              {conversation.displayName || conversation.otherParticipants.map((p) => p.name).join(', ')}
-            </p>
+            <Avatar src={conversation.displayAvatar} name={conversation.displayName} size="sm" />
+            <p className="text-sm font-semibold text-text-primary truncate">{conversation.displayName}</p>
           </>
         )}
       </div>
@@ -55,18 +53,9 @@ export default function MessageThread({ conversationId }) {
             ))}
           </div>
         ) : (
-          messages.map((message, i) => {
-            const prevMessage = messages[i - 1];
-            const showSender = conversation?.type === 'group' && prevMessage?.senderId !== message.senderId;
-            return (
-              <MessageBubble
-                key={message.id}
-                message={message}
-                isOwn={message.senderId === user.id}
-                showSender={showSender}
-              />
-            );
-          })
+          messages.map((message) => (
+            <MessageBubble key={message.id} message={message} isOwn={message.senderId === user.id} />
+          ))
         )}
         <div ref={bottomRef} />
       </div>

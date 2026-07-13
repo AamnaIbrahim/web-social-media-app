@@ -3,24 +3,36 @@ import seedUsers from './users.json';
 import seedConversations from './conversations.json';
 import seedMessages from './messages.json';
 import seedNotifications from './notifications.json';
-import { mockStorage } from '@/services/mockStorage';
 import seedComments from './comments.json';
+import { mockStorage } from '@/services/mockStorage';
 
 const POSTS_KEY = 'hue_mock_posts';
 const USERS_KEY = 'hue_mock_users';
 const CONVERSATIONS_KEY = 'hue_mock_conversations';
 const MESSAGES_KEY = 'hue_mock_messages';
 const NOTIFICATIONS_KEY = 'hue_mock_notifications';
-const FOLLOWS_KEY = 'hue_mock_follows'; // stored as array of "followerId:followedId" strings
 const COMMENTS_KEY = 'hue_mock_comments';
+const FOLLOWS_KEY = 'hue_mock_follows';
 
-let comments = mockStorage.get(COMMENTS_KEY, seedComments);
 let posts = mockStorage.get(POSTS_KEY, seedPosts);
 let users = mockStorage.get(USERS_KEY, seedUsers);
 let conversations = mockStorage.get(CONVERSATIONS_KEY, seedConversations);
 let messages = mockStorage.get(MESSAGES_KEY, seedMessages);
 let notifications = mockStorage.get(NOTIFICATIONS_KEY, seedNotifications);
+let comments = mockStorage.get(COMMENTS_KEY, seedComments);
 let follows = new Set(mockStorage.get(FOLLOWS_KEY, []));
+
+const validConversationIds = new Set(
+  conversations.filter((c) => c.participantIds.length === 2).map((c) => c.id)
+);
+const removedAnyConversation = validConversationIds.size !== conversations.length;
+
+if (removedAnyConversation) {
+  conversations = conversations.filter((c) => validConversationIds.has(c.id));
+  messages = messages.filter((m) => validConversationIds.has(m.conversationId));
+  mockStorage.set(CONVERSATIONS_KEY, conversations);
+  mockStorage.set(MESSAGES_KEY, messages);
+}
 
 export const mockDb = {
   getPosts: () => posts,
@@ -53,6 +65,12 @@ export const mockDb = {
     mockStorage.set(NOTIFICATIONS_KEY, notifications);
     return notifications;
   },
+  getComments: () => comments,
+  setComments: (updater) => {
+    comments = typeof updater === 'function' ? updater(comments) : updater;
+    mockStorage.set(COMMENTS_KEY, comments);
+    return comments;
+  },
   isFollowing: (followerId, followedId) => follows.has(`${followerId}:${followedId}`),
   toggleFollow: (followerId, followedId) => {
     const key = `${followerId}:${followedId}`;
@@ -61,11 +79,5 @@ export const mockDb = {
     else follows.delete(key);
     mockStorage.set(FOLLOWS_KEY, Array.from(follows));
     return nowFollowing;
-  },
-  getComments: () => comments,
-  setComments: (updater) => {
-    comments = typeof updater === 'function' ? updater(comments) : updater;
-    mockStorage.set(COMMENTS_KEY, comments);
-    return comments;
   },
 };

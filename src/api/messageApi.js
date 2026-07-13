@@ -4,24 +4,19 @@ const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 function hydrateConversation(conv, currentUserId) {
   const users = mockDb.getUsers();
-  const otherParticipants = conv.participantIds
+  const otherUser = conv.participantIds
     .filter((id) => id !== currentUserId)
     .map((id) => users.find((u) => u.id === id))
-    .filter(Boolean);
+    .find(Boolean);
 
   const allMessages = mockDb.getMessages().filter((m) => m.conversationId === conv.id);
   const lastMessage = [...allMessages].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
-  // Direct conversations display the other person's identity;
-  // group conversations use their own name/avatar.
-  const displayName = conv.type === 'group' ? conv.name : otherParticipants[0]?.name;
-  const displayAvatar = conv.type === 'group' ? conv.avatarUrl : otherParticipants[0]?.avatarUrl;
-
   return {
     ...conv,
-    otherParticipants,
-    displayName,
-    displayAvatar,
+    otherUser,
+    displayName: otherUser?.name,
+    displayAvatar: otherUser?.avatarUrl,
     lastMessage: lastMessage ?? null,
   };
 }
@@ -89,9 +84,9 @@ export async function findOrCreateDirectConversation(currentUserId, otherUserId)
 
   const existing = conversations.find(
     (c) =>
-      c.type === 'direct' &&
       c.participantIds.includes(currentUserId) &&
-      c.participantIds.includes(otherUserId)
+      c.participantIds.includes(otherUserId) &&
+      c.participantIds.length === 2
   );
   if (existing) return hydrateConversation(existing, currentUserId);
 

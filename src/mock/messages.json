@@ -4,9 +4,5 @@
   { "id": "m3", "conversationId": "c1", "senderId": "u2", "text": "Took way too many tabs to get there lol", "createdAt": "2026-07-12T10:15:00Z" },
 
   { "id": "m4", "conversationId": "c2", "senderId": "u3", "text": "Loved your type study post", "createdAt": "2026-07-11T18:35:00Z" },
-  { "id": "m5", "conversationId": "c2", "senderId": "u1", "text": "Thank you! Still tweaking the scale", "createdAt": "2026-07-11T18:40:00Z" },
-
-  { "id": "m6", "conversationId": "c3", "senderId": "u4", "text": "Can we push crit to Thursday?", "createdAt": "2026-07-10T08:50:00Z" },
-  { "id": "m7", "conversationId": "c3", "senderId": "u3", "text": "Works for me", "createdAt": "2026-07-10T08:55:00Z" },
-  { "id": "m8", "conversationId": "c3", "senderId": "u1", "text": "Same, Thursday it is", "createdAt": "2026-07-10T09:00:00Z" }
+  { "id": "m5", "conversationId": "c2", "senderId": "u1", "text": "Thank you! Still tweaking the scale", "createdAt": "2026-07-11T18:40:00Z" }
 ]

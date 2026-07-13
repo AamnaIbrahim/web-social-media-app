@@ -1,10 +1,11 @@
+import { memo } from 'react';
 import { NavLink } from 'react-router-dom';
 import Avatar from '@/components/ui/Avatar';
 import { formatTimeAgo } from '@/utils/formatDate';
 import { cn } from '@/utils/cn';
 
-export default function ConversationListItem({ conversation }) {
-  const { id, displayName, displayAvatar, lastMessage, type, otherParticipants } = conversation;
+function ConversationListItem({ conversation }) {
+  const { id, displayName, displayAvatar, lastMessage } = conversation;
 
   return (
     <NavLink
@@ -16,21 +17,17 @@ export default function ConversationListItem({ conversation }) {
         )
       }
     >
-      <Avatar src={displayAvatar} name={displayName ?? 'Group'} size="md" />
+      <Avatar src={displayAvatar} name={displayName} size="md" />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-sm font-semibold text-text-primary truncate">
-            {displayName || otherParticipants.map((p) => p.name).join(', ')}
-          </p>
+          <p className="text-sm font-semibold text-text-primary truncate">{displayName}</p>
           {lastMessage && (
             <span className="text-xs text-text-tertiary shrink-0">{formatTimeAgo(lastMessage.createdAt)}</span>
           )}
         </div>
-        <p className="text-xs text-text-tertiary truncate">
-          {type === 'group' && lastMessage ? `${lastMessage.sender?.name ?? ''}: ` : ''}
-          {lastMessage?.text ?? 'No messages yet'}
-        </p>
+        <p className="text-xs text-text-tertiary truncate">{lastMessage?.text ?? 'No messages yet'}</p>
       </div>
     </NavLink>
   );
 }
+export default memo(ConversationListItem);
