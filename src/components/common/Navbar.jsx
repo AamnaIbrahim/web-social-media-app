@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { MessageCircle, Bell, User, Settings, LogOut } from 'lucide-react';
+import { Bell, User, Settings, LogOut } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 import SearchBar from '@/components/ui/SearchBar';
 import Avatar from '@/components/ui/Avatar';
@@ -59,10 +59,6 @@ export default function Navbar({ variant = 'app' }) {
           {variant === 'app' && (
             <>
               <ThemeToggle />
-
-              <Link to={ROUTES.MESSAGES} className="btn-ghost !p-2 rounded-full" aria-label="Messages">
-                <MessageCircle size={20} strokeWidth={1.75} />
-              </Link>
 
               <Link to={ROUTES.NOTIFICATIONS} className="btn-ghost !p-2 rounded-full" aria-label="Notifications">
                 <Bell size={20} strokeWidth={1.75} />
