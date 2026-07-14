@@ -9,16 +9,13 @@ export default function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true); // true until session check resolves
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // On app load: check for a stored token and validate it silently.
-  // This is what lets a returning user land on /home directly instead of
-  // being bounced to /login every time they refresh the page.
   useEffect(() => {
     const token = tokenStorage.get();
     if (!token) {
       setIsLoading(false);
       return;
     }
-    fetchCurrentUser(token)
+    fetchCurrentUser()
       .then((fetchedUser) => {
         setUser(fetchedUser);
         setIsAuthenticated(true);

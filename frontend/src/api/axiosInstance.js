@@ -2,8 +2,9 @@ import axios from 'axios';
 import { tokenStorage } from '@/services/storageService';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/api',
   timeout: 15000,
+  withCredentials: true,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -17,7 +18,6 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       tokenStorage.clear();
-      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

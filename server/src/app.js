@@ -7,6 +7,7 @@ import compression from 'compression';
 import { env } from './config/env.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import healthRoutes from './routes/health.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 
@@ -27,7 +28,7 @@ if (!env.isProduction) {
 }
 
 app.use('/api/health', healthRoutes);
-
+app.use('/api/auth', authRoutes);
 // Future phases mount their routers here, e.g.:
 // app.use('/api/auth', authRoutes);
 // app.use('/api/users', userRoutes);

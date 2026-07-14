@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-const requiredVars = ['MONGODB_URI', 'CLIENT_URL'];
+const requiredVars = ['MONGODB_URI', 'CLIENT_URL', 'JWT_ACCESS_SECRET', 'JWT_REFRESH_SECRET'];
 
 const missing = requiredVars.filter((key) => !process.env[key]);
 if (missing.length > 0) {

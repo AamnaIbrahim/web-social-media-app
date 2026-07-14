@@ -10,6 +10,7 @@ import { registerRules } from '@/features/auth/validation';
 import { ROUTES } from '@/constants/routes';
 import { showToast } from '@/components/ui/toast';
 import { Camera } from 'lucide-react';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 export default function Register() {
   const { register: registerUser } = useAuth();
@@ -27,11 +28,11 @@ export default function Register() {
 
   const onSubmit = async (formData) => {
     try {
-      await registerUser(formData); 
+      await registerUser(formData);
       showToast.success('Account created — welcome to hue');
       navigate(ROUTES.HOME, { replace: true });
     } catch (err) {
-      setError('root', { message: err.message });
+      setError('root', { message: getErrorMessage(err, "Couldn't create your account. Please try again.") });
     }
   };
 

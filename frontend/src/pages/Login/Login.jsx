@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { loginRules } from '@/features/auth/validation';
 import { ROUTES } from '@/constants/routes';
 import { showToast } from '@/components/ui/toast';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 export default function Login() {
   const { login } = useAuth();
@@ -23,12 +24,10 @@ export default function Login() {
     try {
       await login(formData);
       showToast.success('Welcome back');
-      // Send the user back to wherever ProtectedRoute originally caught them,
-      // falling back to /home for a direct login visit.
       const redirectTo = location.state?.from?.pathname ?? ROUTES.HOME;
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      setError('root', { message: err.message });
+      setError('root', { message: getErrorMessage(err, 'Invalid email or password') });
     }
   };
 
