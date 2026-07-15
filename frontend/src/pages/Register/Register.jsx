@@ -26,11 +26,12 @@ export default function Register() {
 
   const avatarPreview = avatarFile ? URL.createObjectURL(avatarFile) : null;
 
+  // Register.jsx — sirf onSubmit update hoga
   const onSubmit = async (formData) => {
     try {
-      await registerUser(formData);
-      showToast.success('Account created — welcome to hue');
-      navigate(ROUTES.HOME, { replace: true });
+      const email = await registerUser(formData);
+      showToast.success('Check your email for a verification code');
+      navigate(ROUTES.VERIFY_EMAIL, { state: { email } });
     } catch (err) {
       setError('root', { message: getErrorMessage(err, "Couldn't create your account. Please try again.") });
     }
@@ -38,13 +39,10 @@ export default function Register() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-text-primary">Create your account</h1>
-      <p className="text-sm text-text-secondary mt-1.5 mb-8">
-        Takes about 20 seconds. No email verification for the demo.
-      </p>
+      <h1 className="text-2xl font-bold text-text-primary text-center">Create your account</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <div className="flex items-center gap-4 mb-1">
+        <div className="flex items-center justify-center gap-4 mb-1">
           <div className="relative">
             <Avatar src={avatarPreview} name="" size="lg" />
             <label
@@ -60,10 +58,6 @@ export default function Register() {
               className="hidden"
               onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
             />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-text-primary">Profile picture</p>
-            <p className="text-xs text-text-tertiary">Square works best. Under 2MB.</p>
           </div>
         </div>
 
@@ -96,9 +90,9 @@ export default function Register() {
           {...register('password', registerRules.password)}
         />
 
-        {errors.root && <p className="error-inline">{errors.root.message}</p>}
+        {errors.root && <p className="error-inline text-center">{errors.root.message}</p>}
 
-        <Button type="submit" size="lg" isLoading={isSubmitting} className="mt-2">
+        <Button type="submit" size="lg" isLoading={isSubmitting} className="mt-2 w-full">
           Create account
         </Button>
 

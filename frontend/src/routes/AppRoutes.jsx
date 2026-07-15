@@ -16,6 +16,7 @@ import GuestRoute from './GuestRoute';
 import Landing from '@/pages/Landing/Landing';
 import Login from '@/pages/Login/Login';
 import Register from '@/pages/Register/Register';
+import VerifyEmail from '@/pages/VerifyEmail/VerifyEmail';
 import Home from '@/pages/Home/Home';
 import Explore from '@/pages/Explore/Explore';
 import Saved from '@/pages/Saved/Saved';
@@ -65,6 +66,7 @@ export default function AppRoutes() {
           <Route element={<AuthLayout />}>
             <Route path={ROUTES.LOGIN} element={<PageTransition><Login /></PageTransition>} />
             <Route path={ROUTES.REGISTER} element={<PageTransition><Register /></PageTransition>} />
+            <Route path={ROUTES.VERIFY_EMAIL} element={<PageTransition><VerifyEmail /></PageTransition>} />
           </Route>
         </Route>
 

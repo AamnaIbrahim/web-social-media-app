@@ -13,6 +13,7 @@ export const env = {
   port: Number(process.env.PORT) || 5000,
   mongodbUri: process.env.MONGODB_URI,
   clientUrl: process.env.CLIENT_URL,
+  isProduction: process.env.NODE_ENV === 'production',
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET,
     refreshSecret: process.env.JWT_REFRESH_SECRET,
@@ -22,5 +23,9 @@ export const env = {
     apiKey: process.env.CLOUDINARY_API_KEY,
     apiSecret: process.env.CLOUDINARY_API_SECRET,
   },
-  isProduction: process.env.NODE_ENV === 'production',
+  email: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+  },
 };

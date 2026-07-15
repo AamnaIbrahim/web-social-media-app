@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useMemo, useCallback } from 'react';
-import { loginRequest, registerRequest, fetchCurrentUser, logoutRequest } from '@/api/authApi';
+import { loginRequest, registerRequest, verifyOtpRequest, resendOtpRequest, fetchCurrentUser, logoutRequest } from '@/api/authApi';
 import { tokenStorage } from '@/services/storageService';
 
 export const AuthContext = createContext(null);
@@ -35,12 +35,15 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const register = useCallback(async (formData) => {
-    const { token, user: newUser } = await registerRequest(formData);
-    tokenStorage.set(token);
-    setUser(newUser);
-    setIsAuthenticated(true);
-    return newUser;
+    const { email } = await registerRequest(formData);
+    return email;
   }, []);
+
+  const verifyEmail = useCallback(async ({ email, code }) => {
+    return verifyOtpRequest({ email, code });
+  }, []);
+
+  const resendOtp = useCallback((email) => resendOtpRequest(email), []);
 
   const logout = useCallback(async () => {
     await logoutRequest();
@@ -50,8 +53,8 @@ export default function AuthProvider({ children }) {
   }, []);
 
   const value = useMemo(
-    () => ({ user, isAuthenticated, isLoading, login, register, logout, setUser }),
-    [user, isAuthenticated, isLoading, login, register, logout]
+    () => ({ user, isAuthenticated, isLoading, login, register, logout, setUser, verifyEmail, resendOtp }),
+    [user, isAuthenticated, isLoading, login, register, logout, verifyEmail, resendOtp]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

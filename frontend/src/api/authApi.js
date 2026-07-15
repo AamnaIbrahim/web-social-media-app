@@ -10,6 +10,16 @@ export async function registerRequest(formData) {
   return data.data;
 }
 
+export async function verifyOtpRequest({ email, code }) {
+  const { data } = await axiosInstance.post('/auth/verify-otp', { email, code });
+  return data.data;
+}
+
+export async function resendOtpRequest(email) {
+  const { data } = await axiosInstance.post('/auth/resend-otp', { email });
+  return data.data;
+}
+
 export async function fetchCurrentUser() {
   const { data } = await axiosInstance.get('/auth/me');
   return data.data;

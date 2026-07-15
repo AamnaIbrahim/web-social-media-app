@@ -33,8 +33,8 @@ export default function Login() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-text-primary">Welcome back</h1>
-      <p className="text-sm text-text-secondary mt-1.5 mb-8">
+      <h1 className="text-2xl font-bold text-text-primary text-center">Welcome back</h1>
+      <p className="text-sm text-text-secondary text-center mt-1.5 mb-8">
         Log in to pick up where you left off.
       </p>
 
@@ -62,11 +62,9 @@ export default function Login() {
           />
         </div>
 
-        {errors.root && (
-          <p className="error-inline">{errors.root.message}</p>
-        )}
+        {errors.root && <p className="error-inline text-center">{errors.root.message}</p>}
 
-        <Button type="submit" size="lg" isLoading={isSubmitting} className="mt-2">
+        <Button type="submit" size="lg" isLoading={isSubmitting} className="mt-2 w-full">
           Log in
         </Button>
 
