@@ -22,11 +22,12 @@ export default function Account() {
   const avatarPreview = avatarFile ? URL.createObjectURL(avatarFile) : user?.avatarUrl;
 
   const onSubmit = (formData) => {
-    updateProfileMutation.mutate({
-      name: formData.fullName,
-      bio: formData.bio,
-      avatarUrl: avatarPreview, // real backend: Multer/Cloudinary upload happens here first
-    });
+    const payload = new FormData();
+    payload.append('name', formData.fullName);
+    payload.append('bio', formData.bio);
+    if (avatarFile) payload.append('avatar', avatarFile);
+
+    updateProfileMutation.mutate(payload);
   };
 
   return (

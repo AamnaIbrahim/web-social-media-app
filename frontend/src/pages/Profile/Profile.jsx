@@ -46,7 +46,7 @@ export default function Profile() {
         isOwnProfile={isOwnProfile}
         isLoading={profileLoading}
         isFollowLoading={followMutation.isPending}
-        onFollowToggle={() => followMutation.mutate(profile.id)}
+        onFollowToggle={() => followMutation.mutate({ targetUserId: profile.id, isCurrentlyFollowing: profile.isFollowing })}
         onEditClick={() => {}}
       />
 

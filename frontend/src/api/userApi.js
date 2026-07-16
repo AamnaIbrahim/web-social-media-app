@@ -1,12 +1,32 @@
-import { mockDb } from '@/mock/mockDb';
+import axiosInstance from './axiosInstance';
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+export async function fetchUserByUsername(username) {
+  const { data } = await axiosInstance.get(`/users/${username}`);
+  return data.data;
+}
 
-export async function fetchUserByUsername(username, currentUserId) {
-  await delay(500);
-  const user = mockDb.getUsers().find((u) => u.username === username);
-  if (!user) throw new Error('User not found');
-  return { ...user, isFollowing: mockDb.isFollowing(currentUserId, user.id) };
+export async function toggleFollow(currentUserId, targetUserId, isCurrentlyFollowing) {
+  const { data } = isCurrentlyFollowing
+    ? await axiosInstance.delete(`/users/${targetUserId}/follow`)
+    : await axiosInstance.post(`/users/${targetUserId}/follow`);
+  return data.data;
+}
+
+export async function updateProfile(formData) {
+  const { data } = await axiosInstance.patch('/users/me', formData, {
+    headers: formData instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+  });
+  return data.data;
+}
+
+export async function fetchSuggestedUsers() {
+  const { data } = await axiosInstance.get('/users/suggested');
+  return data.data;
+}
+
+export async function searchUsers(query) {
+  const { data } = await axiosInstance.get('/users/search', { params: { q: query } });
+  return data.data;
 }
 
 export async function fetchUserPosts(userId) {
@@ -21,10 +41,4 @@ export async function fetchSavedPosts() {
   return mockDb.getPosts()
     .filter((p) => p.saved)
     .map((p) => ({ ...p, user: mockDb.getUsers().find((u) => u.id === p.userId) }));
-}
-
-export async function toggleFollow(currentUserId, targetUserId) {
-  await delay(300);
-  const isFollowing = mockDb.toggleFollow(currentUserId, targetUserId);
-  return { userId: targetUserId, isFollowing };
 }
