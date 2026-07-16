@@ -9,6 +9,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
+import postRoutes from './routes/post.routes.js';
 
 const app = express();
 
@@ -31,9 +32,8 @@ if (!env.isProduction) {
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
 
-// Future phases mount their routers here, e.g.:
-// app.use('/api/posts', postRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -29,16 +29,12 @@ export async function searchUsers(query) {
   return data.data;
 }
 
-export async function fetchUserPosts(userId) {
-  await delay(500);
-  return mockDb.getPosts()
-    .filter((p) => p.userId === userId)
-    .map((p) => ({ ...p, user: mockDb.getUsers().find((u) => u.id === p.userId) }));
+export async function fetchUserPosts(username) {
+  const { data } = await axiosInstance.get(`/users/${username}/posts`);
+  return data.data;
 }
 
 export async function fetchSavedPosts() {
-  await delay(500);
-  return mockDb.getPosts()
-    .filter((p) => p.saved)
-    .map((p) => ({ ...p, user: mockDb.getUsers().find((u) => u.id === p.userId) }));
+  const { data } = await axiosInstance.get('/posts/saved');
+  return data.data;
 }

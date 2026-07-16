@@ -3,6 +3,11 @@ import { useEffect, useRef } from 'react';
 export function useFocusTrap(active, onEscape) {
   const containerRef = useRef(null);
   const previouslyFocused = useRef(null);
+  const onEscapeRef = useRef(onEscape);
+
+  useEffect(() => {
+    onEscapeRef.current = onEscape;
+  }, [onEscape]);
 
   useEffect(() => {
     if (!active) return;
@@ -18,7 +23,7 @@ export function useFocusTrap(active, onEscape) {
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        onEscape?.();
+        onEscapeRef.current?.();
         return;
       }
       if (e.key !== 'Tab' || !focusables?.length) return;
@@ -40,7 +45,7 @@ export function useFocusTrap(active, onEscape) {
       document.removeEventListener('keydown', handleKeyDown);
       previouslyFocused.current?.focus?.();
     };
-  }, [active, onEscape]);
+  }, [active]);
 
   return containerRef;
 }

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { loginRequest, registerRequest, verifyOtpRequest, resendOtpRequest, fetchCurrentUser, logoutRequest } from '@/api/authApi';
 import { tokenStorage } from '@/services/storageService';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AuthContext = createContext(null);
 
@@ -8,6 +9,7 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // true until session check resolves
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const token = tokenStorage.get();
@@ -50,7 +52,8 @@ export default function AuthProvider({ children }) {
     tokenStorage.clear();
     setUser(null);
     setIsAuthenticated(false);
-  }, []);
+    queryClient.clear();
+  }, [queryClient]);
 
   const value = useMemo(
     () => ({ user, isAuthenticated, isLoading, login, register, logout, setUser, verifyEmail, resendOtp }),

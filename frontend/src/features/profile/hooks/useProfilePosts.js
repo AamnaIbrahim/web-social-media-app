@@ -1,18 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchUserPosts, fetchSavedPosts } from '@/api/userApi';
+import { fetchUserPosts } from '@/api/userApi';
+import { fetchSavedPosts } from '@/api/postApi';
+import { useAuth } from '@/hooks/useAuth';
 
-export function useUserPosts(userId) {
+export function useUserPosts(username) {
   return useQuery({
-    queryKey: ['userPosts', userId],
-    queryFn: () => fetchUserPosts(userId),
-    enabled: !!userId,
+    queryKey: ['userPosts', username],
+    queryFn: () => fetchUserPosts(username),
+    enabled: !!username,
   });
 }
 
 export function useSavedPosts(enabled = true) {
+  const { user } = useAuth();
   return useQuery({
-    queryKey: ['savedPosts'],
+    queryKey: ['savedPosts', user?.id],
     queryFn: fetchSavedPosts,
-    enabled,
+    enabled: enabled && !!user?.id,
   });
 }

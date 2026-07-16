@@ -18,7 +18,7 @@ export default function Profile() {
   const isOwnProfile = currentUser?.username === username;
 
   const { data: profile, isLoading: profileLoading, isError, refetch } = useProfile(username);
-  const { data: posts, isLoading: postsLoading } = useUserPosts(profile?.id);
+  const { data: posts, isLoading: postsLoading } = useUserPosts(username);
   const { data: savedPosts, isLoading: savedLoading } = useSavedPosts(isOwnProfile && activeTab === 'saved');
   const followMutation = useFollow(username);
 
@@ -46,7 +46,9 @@ export default function Profile() {
         isOwnProfile={isOwnProfile}
         isLoading={profileLoading}
         isFollowLoading={followMutation.isPending}
-        onFollowToggle={() => followMutation.mutate({ targetUserId: profile.id, isCurrentlyFollowing: profile.isFollowing })}
+        onFollowToggle={() =>
+          followMutation.mutate({ targetUserId: profile.id, isCurrentlyFollowing: profile.isFollowing })
+        }
         onEditClick={() => {}}
       />
 

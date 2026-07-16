@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchSuggestedUsers, searchUsers } from '@/api/userApi';
 import { fetchTrendingTopics } from '@/api/exploreApi';
+import { fetchSuggestedUsers, searchUsers } from '@/api/userApi';
+import { useAuth } from '@/hooks/useAuth';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useState } from 'react';
 
@@ -9,7 +10,12 @@ export function useTrendingTopics() {
 }
 
 export function useSuggestedUsers() {
-  return useQuery({ queryKey: ['suggestedUsers'], queryFn: fetchSuggestedUsers });
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ['suggestedUsers', user?.id],
+    queryFn: fetchSuggestedUsers,
+    enabled: !!user?.id,
+  });
 }
 
 export function useExploreSearch() {
