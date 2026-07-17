@@ -4,7 +4,7 @@ import { Save } from '../models/Save.js';
 import { User } from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { createNotification } from '../services/notification.service.js';
+import { createNotification } from '../controllers/notification.controller.js';
 
 async function hydratePosts(posts, userId) {
   const postIds = posts.map((p) => p._id);

@@ -1,15 +1,31 @@
+import { createNotification as createNotificationInDb } from '../services/notification.service.js';
 import { Notification } from '../models/Notification.js';
+import { getIo } from '../sockets/index.js';
 import { User } from '../models/User.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+
+export async function createNotification(params) {
+  const notification = await createNotificationInDb(params);
+  if (!notification) return null;
+
+  const actor = await User.findById(params.actorId);
+  getIo()?.to(String(params.recipientId)).emit('notification:new', {
+    id: notification._id,
+    type: notification.type,
+    message: notification.message,
+    read: notification.read,
+    createdAt: notification.createdAt,
+    targetPostId: notification.targetPostId,
+    user: actor?.toPublicJSON(),
+  });
+
+  return notification;
+}
 
 export const getNotifications = asyncHandler(async (req, res) => {
   const notifications = await Notification.find({ recipientId: req.user._id })
     .sort({ createdAt: -1 })
-    .limit(50);
-
-  const actorIds = [...new Set(notifications.map((n) => String(n.actorId)))];
-  const actors = await User.find({ _id: { $in: actorIds } });
-  const actorMap = new Map(actors.map((u) => [String(u._id), u.toPublicJSON()]));
+    .populate('actorId', 'name username avatarUrl');
 
   const hydrated = notifications.map((n) => ({
     id: n._id,
@@ -18,7 +34,7 @@ export const getNotifications = asyncHandler(async (req, res) => {
     read: n.read,
     createdAt: n.createdAt,
     targetPostId: n.targetPostId,
-    user: actorMap.get(String(n.actorId)),
+    user: n.actorId,
   }));
 
   res.status(200).json({ success: true, data: hydrated });
@@ -31,11 +47,18 @@ export const markAsRead = asyncHandler(async (req, res) => {
     { new: true }
   );
 
+  if (!notification) {
+    return res.status(404).json({ success: false, message: 'Notification not found' });
+  }
+
   res.status(200).json({ success: true, data: notification });
 });
 
 export const markAllAsRead = asyncHandler(async (req, res) => {
-  await Notification.updateMany({ recipientId: req.user._id, read: false }, { read: true });
+  await Notification.updateMany(
+    { recipientId: req.user._id, read: false },
+    { read: true }
+  );
 
   const notifications = await Notification.find({ recipientId: req.user._id }).sort({ createdAt: -1 });
   res.status(200).json({ success: true, data: notifications });

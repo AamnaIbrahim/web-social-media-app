@@ -3,6 +3,7 @@ import { Message } from '../models/Message.js';
 import { User } from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { getIo } from '../sockets/index.js';
 
 async function hydrateConversations(conversations, currentUserId) {
   const otherUserIds = conversations.map(
@@ -124,17 +125,19 @@ export const sendMessage = asyncHandler(async (req, res) => {
   conversation.updatedAt = message.createdAt;
   await conversation.save();
 
-  res.status(201).json({
-    success: true,
-    data: {
-      id: message._id,
-      conversationId: message.conversationId,
-      senderId: message.senderId,
-      text: message.text,
-      createdAt: message.createdAt,
-      sender: req.user.toPublicJSON(),
-    },
-  });
+  const payload = {
+    id: message._id,
+    conversationId: message.conversationId,
+    senderId: message.senderId,
+    text: message.text,
+    createdAt: message.createdAt,
+    sender: req.user.toPublicJSON(),
+  };
+
+  const recipientId = conversation.participantIds.find((id) => String(id) !== String(req.user._id));
+  getIo()?.to(String(recipientId)).emit('message:new', payload);
+
+  res.status(201).json({ success: true, data: payload });
 });
 
 export const getMessageableUsers = asyncHandler(async (req, res) => {

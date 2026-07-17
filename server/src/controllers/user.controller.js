@@ -2,7 +2,7 @@ import { User } from '../models/User.js';
 import { Follow } from '../models/Follow.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { createNotification } from '../services/notification.service.js';
+import { createNotification } from '../controllers/notification.controller.js';
 
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;

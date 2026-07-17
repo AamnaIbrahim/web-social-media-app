@@ -3,7 +3,7 @@ import { Post } from '../models/Post.js';
 import { User } from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { createNotification } from '../services/notification.service.js';
+import { createNotification } from '../controllers/notification.controller.js';
 
 export const getComments = asyncHandler(async (req, res) => {
   const { id: postId } = req.params;
