@@ -4,6 +4,7 @@ import { Save } from '../models/Save.js';
 import { User } from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { createNotification } from '../services/notification.service.js';
 
 async function hydratePosts(posts, userId) {
   const postIds = posts.map((p) => p._id);
@@ -88,6 +89,14 @@ export const toggleLike = asyncHandler(async (req, res) => {
   } else {
     await Like.create({ userId: req.user._id, postId });
     post.likeCount += 1;
+
+    await createNotification({
+      recipientId: post.userId,
+      actorId: req.user._id,
+      type: 'like',
+      targetPostId: post._id,
+      message: `${req.user.name} liked your post`,
+    });
   }
   await post.save();
 

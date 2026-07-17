@@ -2,6 +2,7 @@ import { User } from '../models/User.js';
 import { Follow } from '../models/Follow.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { createNotification } from '../services/notification.service.js';
 
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
@@ -36,6 +37,13 @@ export const followUser = asyncHandler(async (req, res) => {
 
   await User.findByIdAndUpdate(req.user._id, { $inc: { followingCount: 1 } });
   await User.findByIdAndUpdate(targetUserId, { $inc: { followerCount: 1 } });
+
+  await createNotification({
+    recipientId: targetUserId,
+    actorId: req.user._id,
+    type: 'follow',
+    message: `${req.user.name} started following you`,
+  });
 
   res.status(200).json({ success: true, data: { userId: targetUserId, isFollowing: true } });
 });

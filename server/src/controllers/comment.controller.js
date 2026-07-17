@@ -3,6 +3,7 @@ import { Post } from '../models/Post.js';
 import { User } from '../models/User.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { createNotification } from '../services/notification.service.js';
 
 export const getComments = asyncHandler(async (req, res) => {
   const { id: postId } = req.params;
@@ -34,6 +35,14 @@ export const addComment = asyncHandler(async (req, res) => {
   const comment = await Comment.create({ postId, userId: req.user._id, text: text.trim() });
   post.commentCount += 1;
   await post.save();
+
+  await createNotification({
+    recipientId: post.userId,
+    actorId: req.user._id,
+    type: 'comment',
+    targetPostId: post._id,
+    message: `${req.user.name} commented on your post`,
+  });
 
   res.status(201).json({
     success: true,
