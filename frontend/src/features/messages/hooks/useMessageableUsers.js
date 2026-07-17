@@ -6,7 +6,7 @@ export function useMessageableUsers(query) {
   const { user } = useAuth();
   return useQuery({
     queryKey: ['messageableUsers', user?.id, query],
-    queryFn: () => fetchMessageableUsers(user.id, query),
+    queryFn: () => fetchMessageableUsers(query),
     enabled: !!user?.id,
   });
 }

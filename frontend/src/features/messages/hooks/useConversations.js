@@ -6,7 +6,7 @@ export function useConversations() {
   const { user } = useAuth();
   return useQuery({
     queryKey: ['conversations', user?.id],
-    queryFn: () => fetchConversations(user.id),
+    queryFn: fetchConversations,
     enabled: !!user?.id,
   });
 }

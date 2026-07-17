@@ -3,11 +3,10 @@ import { fetchMessages, sendMessage, fetchConversationById } from '@/api/message
 import { useAuth } from '@/hooks/useAuth';
 
 export function useConversation(conversationId) {
-  const { user } = useAuth();
   return useQuery({
     queryKey: ['conversation', conversationId],
-    queryFn: () => fetchConversationById(conversationId, user.id),
-    enabled: !!conversationId && !!user?.id,
+    queryFn: () => fetchConversationById(conversationId),
+    enabled: !!conversationId,
   });
 }
 
@@ -24,8 +23,7 @@ export function useSendMessage(conversationId) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (text) => sendMessage({ conversationId, senderId: user.id, text }),
-
+    mutationFn: (text) => sendMessage({ conversationId, text }),
     onMutate: async (text) => {
       await queryClient.cancelQueries({ queryKey: ['messages', conversationId] });
       const previous = queryClient.getQueryData(['messages', conversationId]);

@@ -7,9 +7,9 @@ export function useStartConversation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (otherUserId) => findOrCreateDirectConversation(user.id, otherUserId),
+    mutationFn: (otherUserId) => findOrCreateDirectConversation(otherUserId), // no currentUserId arg
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['conversations', user.id] });
+      queryClient.invalidateQueries({ queryKey: ['conversations', user.id] });
     },
   });
 }
