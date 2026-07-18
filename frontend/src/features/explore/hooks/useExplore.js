@@ -1,13 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTrendingTopics } from '@/api/exploreApi';
 import { fetchSuggestedUsers, searchUsers } from '@/api/userApi';
 import { useAuth } from '@/hooks/useAuth';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useState } from 'react';
-
-export function useTrendingTopics() {
-  return useQuery({ queryKey: ['trending'], queryFn: fetchTrendingTopics });
-}
 
 export function useSuggestedUsers() {
   const { user } = useAuth();
@@ -24,7 +19,7 @@ export function useExploreSearch() {
 
   const searchQuery = useQuery({
     queryKey: ['search', debounced],
-    queryFn: async () => ({ users: await searchUsers(debounced), topics: [] }),
+    queryFn: () => searchUsers(debounced),
     enabled: debounced.trim().length > 0,
   });
 
