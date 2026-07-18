@@ -42,7 +42,7 @@ export const followUser = asyncHandler(async (req, res) => {
     recipientId: targetUserId,
     actorId: req.user._id,
     type: 'follow',
-    message: `${req.user.name} started following you`,
+    message: `started following you`,
   });
 
   res.status(200).json({ success: true, data: { userId: targetUserId, isFollowing: true } });

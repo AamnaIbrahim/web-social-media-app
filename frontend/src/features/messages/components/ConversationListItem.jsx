@@ -3,9 +3,11 @@ import { NavLink } from 'react-router-dom';
 import Avatar from '@/components/ui/Avatar';
 import { formatTimeAgo } from '@/utils/formatDate';
 import { cn } from '@/utils/cn';
+import { useIsOnline } from '@/hooks/usePresence';
 
 function ConversationListItem({ conversation }) {
   const { id, displayName, displayAvatar, lastMessage } = conversation;
+  const isOnline = useIsOnline(conversation.otherUser?.id);
 
   return (
     <NavLink
@@ -17,7 +19,7 @@ function ConversationListItem({ conversation }) {
         )
       }
     >
-      <Avatar src={displayAvatar} name={displayName} size="md" />
+      <Avatar src={displayAvatar} name={displayName} size="md" status={isOnline ? 'online' : 'offline'} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2">
           <p className="text-sm font-semibold text-text-primary truncate">{displayName}</p>

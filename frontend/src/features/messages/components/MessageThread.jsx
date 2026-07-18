@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import ErrorState from '@/components/ui/ErrorState';
+import { useIsOnline } from '@/hooks/usePresence';
 
 export default function MessageThread({ conversationId }) {
   const { user } = useAuth();
@@ -16,6 +17,7 @@ export default function MessageThread({ conversationId }) {
   const { data: messages, isLoading: messagesLoading, isError, refetch } = useMessages(conversationId);
   const sendMessageMutation = useSendMessage(conversationId);
   const bottomRef = useRef(null);
+  const isOnline = useIsOnline(conversation?.otherUser?.id);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,7 +41,7 @@ export default function MessageThread({ conversationId }) {
           <SkeletonText lines={1} className="w-32" />
         ) : (
           <>
-            <Avatar src={conversation.displayAvatar} name={conversation.displayName} size="sm" />
+            <Avatar src={conversation.displayAvatar} name={conversation.displayName} size="sm" status={isOnline ? 'online' : 'offline'} />
             <p className="text-sm font-semibold text-text-primary truncate">{conversation.displayName}</p>
           </>
         )}

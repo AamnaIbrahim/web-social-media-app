@@ -1,6 +1,7 @@
 import QueryProvider from './QueryProvider';
 import ThemeProvider from '@/contexts/ThemeContext';
 import AuthProvider from '@/contexts/AuthContext';
+import PresenceProvider from '@/contexts/PresenceContext';
 import ToastProvider from './ToastProvider';
 
 export default function AppProviders({ children }) {
@@ -8,7 +9,9 @@ export default function AppProviders({ children }) {
     <ThemeProvider>
       <QueryProvider>
         <AuthProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <PresenceProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </PresenceProvider>
         </AuthProvider>
       </QueryProvider>
     </ThemeProvider>

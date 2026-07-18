@@ -41,7 +41,7 @@ export const addComment = asyncHandler(async (req, res) => {
     actorId: req.user._id,
     type: 'comment',
     targetPostId: post._id,
-    message: `${req.user.name} commented on your post`,
+    message: `commented on your post`,
   });
 
   res.status(201).json({

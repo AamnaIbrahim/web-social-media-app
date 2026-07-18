@@ -95,7 +95,7 @@ export const toggleLike = asyncHandler(async (req, res) => {
       actorId: req.user._id,
       type: 'like',
       targetPostId: post._id,
-      message: `${req.user.name} liked your post`,
+      message: `liked your post`,
     });
   }
   await post.save();
