@@ -34,12 +34,6 @@ export default function Privacy() {
           checked={preferences.privacy.showActivityStatus}
           onChange={(v) => handleToggle('showActivityStatus', v)}
         />
-        <Switch
-          label="Allow mentions"
-          description="Let people mention you in their posts."
-          checked={preferences.privacy.allowMentions}
-          onChange={(v) => handleToggle('allowMentions', v)}
-        />
       </div>
     </SettingsSection>
   );

@@ -8,11 +8,13 @@ import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 import { Camera } from 'lucide-react';
 import { useState } from 'react';
+import { showToast } from '@/components/ui/toast';
 
 export default function Account() {
   const { user } = useAuth();
   const updateProfileMutation = useUpdateProfile();
   const [avatarFile, setAvatarFile] = useState(null);
+  const MAX_AVATAR_SIZE_MB = 2;
 
   const { register, handleSubmit, watch } = useForm({
     defaultValues: { fullName: user?.name, bio: user?.bio ?? '' },
@@ -47,7 +49,16 @@ export default function Account() {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (file.size > MAX_AVATAR_SIZE_MB * 1024 * 1024) {
+                  showToast.error(`Image must be under ${MAX_AVATAR_SIZE_MB}MB`);
+                  e.target.value = ''; // input reset, taaki wahi badi file dobara select na rahe
+                  return;
+                }
+                setAvatarFile(file);
+              }}
             />
           </div>
           <div>

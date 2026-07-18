@@ -23,7 +23,6 @@ export default function NotificationSettings() {
     { key: 'likes', label: 'Likes', description: 'When someone likes your post.' },
     { key: 'comments', label: 'Comments', description: 'When someone comments on your post.' },
     { key: 'follows', label: 'New followers', description: 'When someone follows you.' },
-    { key: 'mentions', label: 'Mentions', description: 'When someone mentions you.' },
   ];
 
   return (

@@ -6,7 +6,7 @@ export function usePreferences() {
   const { user } = useAuth();
   return useQuery({
     queryKey: ['preferences', user?.id],
-    queryFn: () => fetchPreferences(user.id),
+    queryFn: fetchPreferences,
     enabled: !!user?.id,
   });
 }
@@ -16,9 +16,7 @@ export function useUpdatePreferences() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (updates) => updatePreferences(user.id, updates),
-    // Optimistic update: toggles should feel instant, not wait on the
-    // artificial mock delay.
+    mutationFn: updatePreferences,
     onMutate: async (updates) => {
       await queryClient.cancelQueries({ queryKey: ['preferences', user.id] });
       const previous = queryClient.getQueryData(['preferences', user.id]);
