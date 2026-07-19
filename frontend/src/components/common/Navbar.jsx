@@ -8,10 +8,13 @@ import Dropdown, { DropdownItem } from '@/components/ui/Dropdown';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
+import NavBadge from '@/components/ui/NavBadge';
+import { useUnreadNotificationsCount } from '@/hooks/useUnreadCounts';
 
 export default function Navbar({ variant = 'app' }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const unreadNotifications = useUnreadNotificationsCount();
 
   const handleLogout = async () => {
     await logout();
@@ -60,8 +63,9 @@ export default function Navbar({ variant = 'app' }) {
             <>
               <ThemeToggle />
 
-              <Link to={ROUTES.NOTIFICATIONS} className="btn-ghost !p-2 rounded-full" aria-label="Notifications">
+              <Link to={ROUTES.NOTIFICATIONS} className="relative btn-ghost !p-2 rounded-full" aria-label="Notifications">
                 <Bell size={20} strokeWidth={1.75} />
+                <NavBadge count={unreadNotifications} />
               </Link>
 
               <Dropdown

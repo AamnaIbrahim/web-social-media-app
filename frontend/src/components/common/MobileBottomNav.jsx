@@ -3,16 +3,19 @@ import { Home, Compass, MessageCircle, Bell, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/utils/cn';
+import NavBadge from '@/components/ui/NavBadge';
+import { useUnreadNotificationsCount } from '@/hooks/useUnreadCounts';
 
 export default function MobileBottomNav({ className }) {
   const { user } = useAuth();
+  const unreadNotifications = useUnreadNotificationsCount();
 
   const items = [
-    { icon: Home, to: ROUTES.HOME, label: 'Home' },
-    { icon: Compass, to: ROUTES.EXPLORE, label: 'Explore' },
-    { icon: MessageCircle, to: ROUTES.MESSAGES, label: 'Messages' },
-    { icon: Bell, to: ROUTES.NOTIFICATIONS, label: 'Notifications' },
-    { icon: User, to: user ? `/profile/${user.username}` : '#', label: 'Profile' },
+    { icon: Home, to: ROUTES.HOME, label: 'Home', badge: 0 },
+    { icon: Compass, to: ROUTES.EXPLORE, label: 'Explore', badge: 0 },
+    { icon: MessageCircle, to: ROUTES.MESSAGES, label: 'Messages', badge: 0 },
+    { icon: Bell, to: ROUTES.NOTIFICATIONS, label: 'Notifications', badge: unreadNotifications },
+    { icon: User, to: user ? `/profile/${user.username}` : '#', label: 'Profile', badge: 0 },
   ];
 
   return (
@@ -23,7 +26,7 @@ export default function MobileBottomNav({ className }) {
       )}
       aria-label="Primary"
     >
-      {items.map(({ icon: Icon, to, label }) => (
+      {items.map(({ icon: Icon, to, label, badge }) => (
         <NavLink
           key={label}
           to={to}
@@ -32,7 +35,10 @@ export default function MobileBottomNav({ className }) {
             cn('flex flex-col items-center justify-center gap-0.5 flex-1 h-full', isActive ? 'text-accent' : 'text-text-tertiary')
           }
         >
-          <Icon size={20} strokeWidth={1.75} />
+          <span className="relative inline-flex">
+            <Icon size={20} strokeWidth={1.75} />
+            {badge > 0 && <NavBadge count={badge} />}
+          </span>
         </NavLink>
       ))}
     </nav>

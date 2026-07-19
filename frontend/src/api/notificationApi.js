@@ -14,3 +14,8 @@ export async function markAllAsRead() {
   const { data } = await axiosInstance.patch('/notifications/read-all');
   return data.data;
 }
+
+export async function fetchUnreadNotificationsCount() {
+  const { data } = await axiosInstance.get('/notifications/unread-count');
+  return data.data.count;
+}

@@ -20,6 +20,7 @@ export function useMarkAsRead() {
       queryClient.setQueryData(['notifications', user.id], (old) =>
         old?.map((n) => (n.id === updated.id ? updated : n))
       );
+      queryClient.invalidateQueries({ queryKey: ['notifications', 'unreadCount', user.id] });
     },
   });
 }
@@ -31,6 +32,7 @@ export function useMarkAllAsRead() {
     mutationFn: markAllAsRead,
     onSuccess: (updated) => {
       queryClient.setQueryData(['notifications', user.id], updated);
+      queryClient.invalidateQueries({ queryKey: ['notifications', 'unreadCount', user.id] });
     },
   });
 }
