@@ -3,6 +3,9 @@ import { Follow } from '../models/Follow.js';
 import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { createNotification } from '../controllers/notification.controller.js';
+import { Like } from '../models/Like.js';
+import { Post } from '../models/Post.js';
+import { Comment } from '../models/Comment.js';
 
 export const getUserByUsername = asyncHandler(async (req, res) => {
   const { username } = req.params;
@@ -97,4 +100,22 @@ export const searchUsers = asyncHandler(async (req, res) => {
   }).limit(10);
 
   res.status(200).json({ success: true, data: users.map((u) => u.toPublicJSON()) });
+});
+
+export const getMyWeeklyInsights = asyncHandler(async (req, res) => {
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const myPostIds = await Post.find({ userId: req.user._id }).distinct('_id');
+
+  const [newFollowers, likesReceived, commentsReceived, postsThisWeek] = await Promise.all([
+    Follow.countDocuments({ followedId: req.user._id, createdAt: { $gte: sevenDaysAgo } }),
+    Like.countDocuments({ postId: { $in: myPostIds }, createdAt: { $gte: sevenDaysAgo } }),
+    Comment.countDocuments({ postId: { $in: myPostIds }, createdAt: { $gte: sevenDaysAgo } }),
+    Post.countDocuments({ userId: req.user._id, createdAt: { $gte: sevenDaysAgo } }),
+  ]);
+
+  res.status(200).json({
+    success: true,
+    data: { newFollowers, likesReceived, commentsReceived, postsThisWeek },
+  });
 });

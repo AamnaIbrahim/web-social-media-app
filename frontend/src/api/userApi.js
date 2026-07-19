@@ -38,3 +38,8 @@ export async function fetchSavedPosts() {
   const { data } = await axiosInstance.get('/posts/saved');
   return data.data;
 }
+
+export async function fetchMyWeeklyInsights() {
+  const { data } = await axiosInstance.get('/users/me/insights');
+  return data.data;
+}
