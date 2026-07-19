@@ -29,3 +29,8 @@ export async function fetchMessageableUsers(query = '') {
   const { data } = await axiosInstance.get('/messages/messageable', { params: { q: query } });
   return data.data;
 }
+
+export async function fetchUnreadConversationsCount() {
+  const { data } = await axiosInstance.get('/messages/unread-count');
+  return data.data.count;
+}

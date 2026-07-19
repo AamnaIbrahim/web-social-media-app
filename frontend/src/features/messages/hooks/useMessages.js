@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchMessages, sendMessage, fetchConversationById } from '@/api/messageApi';
 import { useAuth } from '@/hooks/useAuth';
+import { useEffect } from 'react';
 
 export function useConversation(conversationId) {
   return useQuery({
@@ -11,11 +12,22 @@ export function useConversation(conversationId) {
 }
 
 export function useMessages(conversationId) {
-  return useQuery({
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
     queryKey: ['messages', conversationId],
     queryFn: () => fetchMessages(conversationId),
     enabled: !!conversationId,
   });
+
+   useEffect(() => {
+    if (!conversationId || !user?.id || query.isLoading) return;
+    queryClient.invalidateQueries({ queryKey: ['messages', 'unreadCount', user.id] });
+    queryClient.invalidateQueries({ queryKey: ['conversations', user.id] });
+  }, [conversationId, user?.id, query.isLoading, queryClient]);
+
+  return query;
 }
 
 export function useSendMessage(conversationId) {
@@ -47,6 +59,7 @@ export function useSendMessage(conversationId) {
         old.map((m) => (m.isOptimistic ? realMessage : m))
       );
       queryClient.invalidateQueries({ queryKey: ['conversations', user.id] });
+      queryClient.invalidateQueries({ queryKey: ['messages', 'unreadCount', user.id] });
     },
   });
 }

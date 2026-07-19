@@ -4,16 +4,17 @@ import { useAuth } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
 import { cn } from '@/utils/cn';
 import NavBadge from '@/components/ui/NavBadge';
-import { useUnreadNotificationsCount } from '@/hooks/useUnreadCounts';
+import { useUnreadNotificationsCount, useUnreadMessagesCount } from '@/hooks/useUnreadCounts';
 
 export default function MobileBottomNav({ className }) {
   const { user } = useAuth();
   const unreadNotifications = useUnreadNotificationsCount();
+  const unreadMessages = useUnreadMessagesCount();
 
   const items = [
     { icon: Home, to: ROUTES.HOME, label: 'Home', badge: 0 },
     { icon: Compass, to: ROUTES.EXPLORE, label: 'Explore', badge: 0 },
-    { icon: MessageCircle, to: ROUTES.MESSAGES, label: 'Messages', badge: 0 },
+    { icon: MessageCircle, to: ROUTES.MESSAGES, label: 'Messages', badge: unreadMessages },
     { icon: Bell, to: ROUTES.NOTIFICATIONS, label: 'Notifications', badge: unreadNotifications },
     { icon: User, to: user ? `/profile/${user.username}` : '#', label: 'Profile', badge: 0 },
   ];

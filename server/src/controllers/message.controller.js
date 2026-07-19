@@ -5,10 +5,16 @@ import { AppError } from '../utils/AppError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { getIo } from '../sockets/index.js';
 
+function isUnreadForUser(lastMessage, conv, currentUserId) {
+  if (!lastMessage) return false;
+  if (String(lastMessage.senderId) === String(currentUserId)) return false;
+  const readEntry = conv.lastReadAt?.find((r) => String(r.userId) === String(currentUserId));
+  if (!readEntry) return true;
+  return new Date(lastMessage.createdAt) > new Date(readEntry.at);
+}
+
 async function hydrateConversations(conversations, currentUserId) {
-  const otherUserIds = conversations.map(
-    (c) => c.participantIds.find((id) => String(id) !== String(currentUserId))
-  );
+  const otherUserIds = conversations.map((c) => c.participantIds.find((id) => String(id) !== String(currentUserId)));
   const conversationIds = conversations.map((c) => c._id);
 
   const [users, lastMessages] = await Promise.all([
@@ -37,23 +43,33 @@ async function hydrateConversations(conversations, currentUserId) {
         lastMessage: lastMessage
           ? { id: lastMessage._id, text: lastMessage.text, senderId: lastMessage.senderId, createdAt: lastMessage.createdAt }
           : null,
+        unread: isUnreadForUser(lastMessage, conv, currentUserId),
         updatedAt: conv.updatedAt,
       };
     })
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 }
 
+async function markConversationReadInternal(conversation, userId) {
+  const idx = conversation.lastReadAt.findIndex((r) => String(r.userId) === String(userId));
+  if (idx >= 0) conversation.lastReadAt[idx].at = new Date();
+  else conversation.lastReadAt.push({ userId, at: new Date() });
+  await conversation.save();
+}
+
 export const getConversations = asyncHandler(async (req, res) => {
   const conversations = await Conversation.find({ participantIds: req.user._id });
+  res.status(200).json({ success: true, data: await hydrateConversations(conversations, req.user._id) });
+});
+
+export const getUnreadConversationsCount = asyncHandler(async (req, res) => {
+  const conversations = await Conversation.find({ participantIds: req.user._id });
   const hydrated = await hydrateConversations(conversations, req.user._id);
-  res.status(200).json({ success: true, data: hydrated });
+  res.status(200).json({ success: true, data: { count: hydrated.filter((c) => c.unread).length } });
 });
 
 export const getConversationById = asyncHandler(async (req, res) => {
-  const conversation = await Conversation.findOne({
-    _id: req.params.id,
-    participantIds: req.user._id, // guarantees you can only fetch conversations you're actually part of
-  });
+  const conversation = await Conversation.findOne({ _id: req.params.id, participantIds: req.user._id });
   if (!conversation) throw new AppError('Conversation not found', 404);
 
   const [hydrated] = await hydrateConversations([conversation], req.user._id);
@@ -62,10 +78,7 @@ export const getConversationById = asyncHandler(async (req, res) => {
 
 export const findOrCreateConversation = asyncHandler(async (req, res) => {
   const { userId: otherUserId } = req.body;
-
-  if (String(otherUserId) === String(req.user._id)) {
-    throw new AppError("You can't message yourself", 400);
-  }
+  if (String(otherUserId) === String(req.user._id)) throw new AppError("You can't message yourself", 400);
 
   const otherUser = await User.findById(otherUserId);
   if (!otherUser) throw new AppError('User not found', 404);
@@ -83,16 +96,15 @@ export const findOrCreateConversation = asyncHandler(async (req, res) => {
 });
 
 export const getMessages = asyncHandler(async (req, res) => {
-  const conversation = await Conversation.findOne({
-    _id: req.params.id,
-    participantIds: req.user._id,
-  });
+  const conversation = await Conversation.findOne({ _id: req.params.id, participantIds: req.user._id });
   if (!conversation) throw new AppError('Conversation not found', 404);
 
   const messages = await Message.find({ conversationId: req.params.id }).sort({ createdAt: 1 });
   const senderIds = [...new Set(messages.map((m) => String(m.senderId)))];
   const senders = await User.find({ _id: { $in: senderIds } });
   const senderMap = new Map(senders.map((u) => [String(u._id), u.toPublicJSON()]));
+
+  await markConversationReadInternal(conversation, req.user._id);
 
   const hydrated = messages.map((m) => ({
     id: m._id,
@@ -110,18 +122,10 @@ export const sendMessage = asyncHandler(async (req, res) => {
   const { text } = req.body;
   if (!text?.trim()) throw new AppError('Message cannot be empty', 400);
 
-  const conversation = await Conversation.findOne({
-    _id: req.params.id,
-    participantIds: req.user._id,
-  });
+  const conversation = await Conversation.findOne({ _id: req.params.id, participantIds: req.user._id });
   if (!conversation) throw new AppError('Conversation not found', 404);
 
-  const message = await Message.create({
-    conversationId: conversation._id,
-    senderId: req.user._id,
-    text: text.trim(),
-  });
-
+  const message = await Message.create({ conversationId: conversation._id, senderId: req.user._id, text: text.trim() });
   conversation.updatedAt = message.createdAt;
   await conversation.save();
 

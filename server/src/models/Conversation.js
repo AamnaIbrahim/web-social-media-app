@@ -1,3 +1,4 @@
+// src/models/Conversation.js
 import mongoose from 'mongoose';
 
 const conversationSchema = new mongoose.Schema(
@@ -10,6 +11,12 @@ const conversationSchema = new mongoose.Schema(
       },
     },
     updatedAt: { type: Date, default: Date.now },
+    lastReadAt: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        at: { type: Date },
+      },
+    ],
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
